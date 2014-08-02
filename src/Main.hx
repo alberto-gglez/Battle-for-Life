@@ -16,9 +16,11 @@ class Main extends Sprite {
 
 	/* ENTRY POINT */
 	
-	function resize(e) {
+	function resize(e:Event) {
 		if (!inited) init();
-		// else (resize or orientation change)
+		else {
+			//
+		}
 	}
 	
 	function init() {
@@ -26,6 +28,9 @@ class Main extends Sprite {
 		inited = true;
 
 		//
+		addChild(MainMenuState.getInstance());
+		addChild(PlayState.getInstance());
+		
 		GameManager.getInstance().start();
 	}
 

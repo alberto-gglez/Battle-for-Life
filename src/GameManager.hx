@@ -28,6 +28,8 @@ class GameManager {
 		Lib.current.stage.addEventListener(Event.ENTER_FRAME, frameStarted);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_DOWN, keyPressed);
 		Lib.current.stage.addEventListener(KeyboardEvent.KEY_UP, keyReleased);
+		
+		changeState(MainMenuState.getInstance());
 	}
 	
 	// events management
