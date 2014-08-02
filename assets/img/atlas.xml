@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
+<!-- $TexturePacker:SmartUpdate:5801086ebbc05617d337e6669b62134a:5e87ece689aa5c9137c898fed2604f16:cde709370900f12288f3449eded86f07$ -->
+<TextureAtlas imagePath="atlas.png">
+    <SubTexture name="emptyheart" x="2" y="2" width="13" height="11"/>
+    <SubTexture name="fullheart" x="17" y="2" width="13" height="11"/>
+    <SubTexture name="playerdown_0" x="32" y="2" width="31" height="19"/>
+    <SubTexture name="playerleft_0" x="65" y="2" width="31" height="19"/>
+    <SubTexture name="playerright_0" x="2" y="23" width="31" height="19"/>
+    <SubTexture name="playerstand_0" x="35" y="23" width="31" height="19"/>
+    <SubTexture name="playerup_0" x="68" y="23" width="31" height="19"/>
+    <SubTexture name="shoot_0" x="101" y="23" width="3" height="3"/>
+    <SubTexture name="shoot_1" x="106" y="23" width="3" height="3"/>
+    <SubTexture name="shoot_2" x="111" y="23" width="3" height="3"/>
+    <SubTexture name="shoot_3" x="116" y="23" width="3" height="3"/>
+    <SubTexture name="title" x="2" y="44" width="92" height="65"/>
+</TextureAtlas>
