@@ -19,7 +19,9 @@ class Main extends Sprite {
 	function resize(e:Event) {
 		if (!inited) init();
 		else {
-			//
+			//trace("stagewidth:" + Lib.current.stage.stageWidth + ", stageheight:" + Lib.current.stage.stageHeight);
+			//trace("width:" + Lib.current.stage.width + ", height:" + Lib.current.stage.height);
+			//trace("width:" + Lib.current.width + ", height:" + Lib.current.height);
 		}
 	}
 	
