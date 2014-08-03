@@ -8,9 +8,8 @@ import openfl.geom.Rectangle;
 class EnemyBullet extends Entity {
 
 	private var _clip:TileClip;
-	private static var _bullets:Array<EnemyBullet>;
 	
-	public function new(tl:TileLayer, x:Int, y:Int, bullets:Array<EnemyBullet>) {
+	public function new(tl:TileLayer, x:Int, y:Int) {
 		super(tl);
 		
 		this.x = x; this.y = y;
@@ -21,8 +20,6 @@ class EnemyBullet extends Entity {
 		_clip = new TileClip(_layer, "shoot", 10);
 		_clip.x = x; _clip.y = y;
 		_layer.addChild(_clip);
-		
-		_bullets = bullets;
 		
 		_hitbox = new Rectangle(x - _clip.width / 2, y - _clip.height / 2, _clip.width, _clip.height);
 	}
@@ -39,7 +36,7 @@ class EnemyBullet extends Entity {
 	}
 	
 	public function destroy():Void {
-		_bullets.remove(this);
+		PlayState.getInstance()._enemyBullets.remove(this);
 		_layer.removeChild(_clip);
 	}
 	

@@ -97,13 +97,31 @@ class Player extends Entity {
 		_invul = b;
 	}
 	
+	public function gotHit():Void {
+		if (PlayState.getInstance()._lifes > 0) {
+			PlayState.getInstance()._lifes--;
+			PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "emptyheart";
+			
+			PlayState.getInstance()._sndplayerhit.play();
+			PlayState.getInstance().damagedEffect(this, 8);
+			
+		} else {
+			PlayState.getInstance()._sndexplosion.play();
+			setInvul(true);
+			visible = false;
+			PlayState.getInstance()._bodyexplosions.push(new BodyExplosion(_layer, Std.int(x), Std.int(y)));
+			
+			PlayState.getInstance().gameOver();
+		}
+	}
+	
 	public function update(eTime:Int, eb:Array<EnemyBullet>):Void {
 		
 		// collisions with enemy bullets
 		if (!_invul)
 			for (bullet in eb)
 				if (collision(bullet)) {
-					PlayState.getInstance().playerGotHit();
+					gotHit();
 					bullet.destroy();
 				}
 		
@@ -113,8 +131,8 @@ class Player extends Entity {
 		x += _hspeed * eTime * _speed;
 		y += _vspeed * eTime * _speed;
 
-		if (x - _curClip.width / 2 < - 8)
-			x = _curClip.width / 2 - 8;
+		if (x - _curClip.width / 2 < 0)
+			x = _curClip.width / 2;
 		else if (x + _curClip.width / 2 > 100)
 			x = 100 - _curClip.width / 2;
 

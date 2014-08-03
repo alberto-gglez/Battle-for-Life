@@ -24,7 +24,7 @@ class BodyExplosion extends Sprite {
 	private var _inertia:Float;
 	private var _speed:Float;
 	
-	public function new(tl:TileLayer, x:Int, y:Int) {
+	public function new(tl:TileLayer, x:Int, y:Int, sc:Float = 1) {
 		super();
 		
 		_layer = tl;
@@ -42,6 +42,7 @@ class BodyExplosion extends Sprite {
 			tile.mirror = Std.random(3);
 			tile._hspeed = 1 - Std.random(3);
 			tile._vspeed = 1 - Std.random(3);
+			tile.scale = sc;
 			
 			_pieces.push(tile);
 			_layer.addChild(tile);

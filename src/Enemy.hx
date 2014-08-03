@@ -61,8 +61,30 @@ class Enemy extends Entity {
 	}
 	
 	public function damage():Int {
-		_health--;
+		
 		return _health;
+	}
+	
+	public function gotHit():Void {
+		_health--;
+		
+		if (_health > 0) {
+			PlayState.getInstance().damagedEffect(this, 8);
+			
+			if (_health == 7) {
+				if (PlayState.getInstance()._enemiesKilled != 0 && PlayState.getInstance()._enemiesKilled % 5 == 0)
+					PlayState.getInstance()._enemies.push(new MiniEnemy(_layer, PlayState.getInstance()._player));
+				else
+					PlayState.getInstance()._enemies.push(new Enemy(_layer, PlayState.getInstance()._player));
+			}
+				
+		} else {
+			kill();
+			PlayState.getInstance()._enemiesKilled++;
+			PlayState.getInstance()._sndexplosion.play();
+			PlayState.getInstance()._score += 10;
+			PlayState.getInstance()._bodyexplosions.push(new BodyExplosion(_layer, Std.int(x), Std.int(y), _curClip.scale));
+		}
 	}
 	
 	// Event management
@@ -70,10 +92,9 @@ class Enemy extends Entity {
 		
 		for (bullet in b)
 			if (collision(bullet)) {
-				PlayState.getInstance().enemyGotHit(this);
+				gotHit();
 				bullet.destroy();
 			}
-
 		
 		for (i in _vclips)
 			i.visible = false;
@@ -90,20 +111,7 @@ class Enemy extends Entity {
 	
 	public function aistart():Void {
 		updateClip(Std.string(playerleft));
-		Actuate.timer(0.5).onComplete(shoot);
-	}
-	
-	public function aimovement():Void {
-		if (_health > 0) {
-			var ytarget = _player.y - 4;
-			if (y < ytarget) {
-				Actuate.timer(0.2).onComplete(updateClip, [Std.string(playerdown)]);
-			} else if (y > ytarget) {
-				Actuate.timer(0.2).onComplete(updateClip, [Std.string(playerup)]);
-			}
-			
-			Actuate.tween(this, 1, { y: ytarget } ).ease(Cubic.easeInOut).onComplete(aistart);
-		}
+		Actuate.timer(0.5).onComplete(aishoot);
 	}
 	
 	private function updateClip(clipName:String):Void {
@@ -115,24 +123,42 @@ class Enemy extends Entity {
 			_movingDown = false;
 	}
 	
-	public function shoot():Void {
-		if (_health > 0 && !PlayState.getInstance().checkGameOver()) {
-			var xb = x - 12; var yb = y;
-			
-			PlayState.getInstance().enemyShoot(xb, yb);
-			Actuate.timer(0.2).onComplete(PlayState.getInstance().enemyShoot, [xb, yb]);
-			Actuate.timer(0.4).onComplete(PlayState.getInstance().enemyShoot, [xb, yb]);
-			
-			Actuate.timer(0.6).onComplete(aimovement);
-		}
-	}
-	
-	public function kill(e:Array<Enemy>):Void {
+	public function kill():Void {
 		
 		for (clip in _vclips)
 			_layer.removeChild(clip);
 		
-		e.remove(this);
+		PlayState.getInstance()._enemies.remove(this);
+	}
+	
+	public function shoot(x:Float, y:Float) {
+		var bullet = new EnemyBullet(_layer, Std.int(x), Std.int(y));
+		PlayState.getInstance()._enemyBullets.push(bullet);
+	}
+	
+	public function aimovement():Void {
+		if (_health > 0) {
+			var ytarget = _player.y - 2;
+			if (y < ytarget) {
+				Actuate.timer(0.2).onComplete(updateClip, [Std.string(playerdown)]);
+			} else if (y > ytarget) {
+				Actuate.timer(0.2).onComplete(updateClip, [Std.string(playerup)]);
+			}
+			
+			Actuate.tween(this, 1, { y: ytarget } ).ease(Cubic.easeInOut).onComplete(aistart);
+		}
+	}
+	
+	public function aishoot():Void {
+		if (_health > 0 && !PlayState.getInstance()._gameOver) {
+			var xb = x - 12; var yb = y - 3;
+			
+			shoot(xb, yb);
+			Actuate.timer(0.2).onComplete(shoot, [xb, yb]);
+			Actuate.timer(0.4).onComplete(shoot, [xb, yb]);
+			
+			Actuate.timer(0.6).onComplete(aimovement);
+		}
 	}
 	
 }
