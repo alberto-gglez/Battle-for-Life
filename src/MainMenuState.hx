@@ -69,6 +69,7 @@ class MainMenuState extends GameState {
 	
 	// Event management
 	public override function enter	() : Void {
+		Lib.current.stage.color = 0x7F0000;
 		addChild(_layer.view);
 		addChild(_info);
 	}

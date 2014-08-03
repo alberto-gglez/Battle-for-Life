@@ -43,7 +43,7 @@ class Player extends Entity {
 		
 		var i:Int = 0;
 		for (value in Type.getEnumConstructs(PlayerStates)) {
-			var clip = new TileClip(_layer, value);
+			var clip = new TileClip(_layer, value, 12);
 			clip.x = x; clip.y = y;
 			clip.visible = false;
 			_layer.addChild(clip);
@@ -113,8 +113,8 @@ class Player extends Entity {
 		x += _hspeed * eTime * _speed;
 		y += _vspeed * eTime * _speed;
 
-		if (x - _curClip.width / 2 < -12)
-			x = _curClip.width / 2 - 12;
+		if (x - _curClip.width / 2 < - 8)
+			x = _curClip.width / 2 - 8;
 		else if (x + _curClip.width / 2 > 100)
 			x = 100 - _curClip.width / 2;
 
@@ -130,7 +130,7 @@ class Player extends Entity {
 		} else if (_vspeed == -1) {
 			_curClip = _vclips[_mapstate.get(Std.string(playerup))];
 		} else if (_hspeed == 1) {
-			_curClip = _vclips[_mapstate.get(Std.string(playerright))];
+			_curClip = _vclips[_mapstate.get(Std.string(playerstand))];
 		} else if (_hspeed == -1) {
 			_curClip = _vclips[_mapstate.get(Std.string(playerleft))];
 		} else

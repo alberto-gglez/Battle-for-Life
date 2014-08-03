@@ -8,7 +8,7 @@ import motion.Actuate;
 import motion.easing.Cubic;
 
 enum EnemyStates {
-	playerstand;
+	playerleft;
 	playerup;
 	playerdown;
 }
@@ -41,7 +41,7 @@ class Enemy extends Entity {
 		
 		var i:Int = 0;
 		for (value in Type.getEnumConstructs(EnemyStates)) {
-			var clip = new TileClip(_layer, value);
+			var clip = new TileClip(_layer, value, 12);
 			clip.mirror = 1;
 			clip.x = x; clip.y = y;
 			clip.visible = false;
@@ -52,7 +52,7 @@ class Enemy extends Entity {
 			i++;
 		}
 		
-		_curClip = _vclips[_mapstate.get(Std.string(playerstand))];
+		_curClip = _vclips[_mapstate.get(Std.string(playerleft))];
 		
 		_curClip.visible = true;
 		_hitbox = new Rectangle(x - 10, y - 8, 19, 10);
@@ -89,7 +89,7 @@ class Enemy extends Entity {
 	}
 	
 	public function aistart():Void {
-		updateClip(Std.string(playerstand));
+		updateClip(Std.string(playerleft));
 		Actuate.timer(0.5).onComplete(shoot);
 	}
 	
@@ -116,8 +116,8 @@ class Enemy extends Entity {
 	}
 	
 	public function shoot():Void {
-		if (_health > 0) {
-			var xb = x - 12; var yb = y - 3;
+		if (_health > 0 && !PlayState.getInstance().checkGameOver()) {
+			var xb = x - 12; var yb = y;
 			
 			PlayState.getInstance().enemyShoot(xb, yb);
 			Actuate.timer(0.2).onComplete(PlayState.getInstance().enemyShoot, [xb, yb]);

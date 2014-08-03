@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:23adad44bbf34f90b23936a8cbfe6f0d:0ad4d7e2505b49d4e446207667ab9179:cde709370900f12288f3449eded86f07$ -->
+<!-- $TexturePacker:SmartUpdate:3118b05cf48768b39e374d1c7b98c860:475225019c6a972be0103222832035aa:cde709370900f12288f3449eded86f07$ -->
 <TextureAtlas imagePath="atlas.png">
-    <SubTexture name="emptyheart" x="2" y="2" width="13" height="11"/>
-    <SubTexture name="fullheart" x="17" y="2" width="13" height="11"/>
-    <SubTexture name="playerdown_0" x="32" y="2" width="31" height="19"/>
-    <SubTexture name="playerleft_0" x="65" y="2" width="31" height="19"/>
-    <SubTexture name="playerright_0" x="2" y="23" width="31" height="19"/>
-    <SubTexture name="playerstand_0" x="2" y="23" width="31" height="19"/>
-    <SubTexture name="playerup_0" x="35" y="23" width="31" height="19"/>
-    <SubTexture name="shoot_0" x="68" y="23" width="6" height="6"/>
-    <SubTexture name="shoot_1" x="76" y="23" width="6" height="6"/>
-    <SubTexture name="shoot_2" x="84" y="23" width="6" height="6"/>
-    <SubTexture name="shoot_3" x="92" y="23" width="6" height="6"/>
-    <SubTexture name="special_0" x="100" y="23" width="11" height="11"/>
-    <SubTexture name="special_1" x="113" y="23" width="11" height="11"/>
-    <SubTexture name="special_2" x="2" y="44" width="11" height="11"/>
-    <SubTexture name="special_3" x="15" y="44" width="11" height="11"/>
-    <SubTexture name="title" x="28" y="44" width="92" height="65"/>
+    <SubTexture name="emptyheart" x="30" y="15" width="13" height="11"/>
+    <SubTexture name="fullheart" x="15" y="15" width="13" height="11"/>
+    <SubTexture name="piece0" x="77" y="2" width="14" height="7"/>
+    <SubTexture name="piece1" x="44" y="2" width="6" height="9"/>
+    <SubTexture name="piece2" x="52" y="2" width="10" height="6"/>
+    <SubTexture name="piece3" x="45" y="15" width="21" height="9"/>
+    <SubTexture name="piece4" x="64" y="2" width="11" height="6"/>
+    <SubTexture name="piece5" x="2" y="2" width="3" height="3"/>
+    <SubTexture name="piece6" x="7" y="2" width="3" height="3"/>
+    <SubTexture name="playerdown_0" x="101" y="15" width="31" height="19"/>
+    <SubTexture name="playerleft_0" x="2" y="36" width="31" height="19"/>
+    <SubTexture name="playerleft_1" x="68" y="36" width="31" height="19"/>
+    <SubTexture name="playerright_0" x="68" y="15" width="31" height="19"/>
+    <SubTexture name="playerstand_0" x="68" y="15" width="31" height="19"/>
+    <SubTexture name="playerstand_1" x="101" y="36" width="31" height="19"/>
+    <SubTexture name="playerstand_2" x="2" y="57" width="31" height="19"/>
+    <SubTexture name="playerstand_3" x="101" y="36" width="31" height="19"/>
+    <SubTexture name="playerup_0" x="35" y="36" width="31" height="19"/>
+    <SubTexture name="shoot_0" x="36" y="2" width="6" height="6"/>
+    <SubTexture name="shoot_1" x="12" y="2" width="6" height="6"/>
+    <SubTexture name="shoot_2" x="28" y="2" width="6" height="6"/>
+    <SubTexture name="shoot_3" x="20" y="2" width="6" height="6"/>
+    <SubTexture name="special_0" x="93" y="2" width="11" height="11"/>
+    <SubTexture name="special_1" x="106" y="2" width="11" height="11"/>
+    <SubTexture name="special_2" x="119" y="2" width="11" height="11"/>
+    <SubTexture name="special_3" x="2" y="15" width="11" height="11"/>
+    <SubTexture name="title" x="35" y="57" width="92" height="65"/>
 </TextureAtlas>
