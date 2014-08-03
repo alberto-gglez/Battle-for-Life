@@ -31,9 +31,10 @@ class PlayState extends GameState {
 	private var _maxBullets:Int;
 	
 	public var _enemies:Array<Enemy>;
-	public var _enemyBullets:Array<EnemyBullet>;
-	public var _bodyexplosions:Array<BodyExplosion>;
+	public var _enemyBullets:Array<Bullet>;
 	public var _enemiesKilled:Int;
+	
+	public var _bodyexplosions:Array<BodyExplosion>;
 	
 	private var _prevTime:Int;
 	
@@ -48,7 +49,9 @@ class PlayState extends GameState {
 	
 	private var _sndshoot:Sound;
 	public var _sndplayerhit:Sound;
+	public var _sndenemyhit:Sound;
 	public var _sndexplosion:Sound;
+	public var _sndbigbullet:Sound;
 	
 	private var _keysPressed:Map<Int, Bool>;
 	
@@ -67,7 +70,9 @@ class PlayState extends GameState {
 		
 		_sndshoot = Assets.getSound("snd/shoot.wav");
 		_sndplayerhit = Assets.getSound("snd/playerhit.wav");
+		_sndenemyhit = Assets.getSound("snd/enemyhit.wav");
 		_sndexplosion = Assets.getSound("snd/enemykilled.wav");
+		_sndbigbullet = Assets.getSound("snd/bigbullet.wav");
 		
 		_rect = new Sprite();
 		_rect.graphics.beginFill(0x000000);
@@ -111,7 +116,7 @@ class PlayState extends GameState {
 		_keysPressed = new Map<Int, Bool>();
 		
 		_enemies = new Array<Enemy>();
-		_enemyBullets = new Array<EnemyBullet>();
+		_enemyBullets = new Array<Bullet>();
 		_bodyexplosions = new Array<BodyExplosion>();
 		_enemiesKilled = 0;
 		
@@ -169,7 +174,7 @@ class PlayState extends GameState {
 		Actuate.timer(0.2).onComplete(addChild, [_gamelayer.view]);
 		Actuate.timer(0.2).onComplete(addChild, [_rect]);
 		Actuate.timer(0.2).onComplete(addChild, [_uilayer.view]);
-		Actuate.timer(0.2).onComplete(_enemies.push, [new MiniEnemy(_gamelayer, _player)]);
+		Actuate.timer(0.2).onComplete(_enemies.push, [new Enemy(_gamelayer)]);
 		//Actuate.timer(0.2).onComplete(addChild, [new FPS(100, 120, 0xFFFFFF)]);
 		Actuate.timer(0.2).onComplete(addChild, [_scoretxt]);
 		_prevTime = Lib.getTimer();

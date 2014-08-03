@@ -93,10 +93,6 @@ class Player extends Entity {
 		}
 	}
 	
-	public function setInvul(b:Bool):Void {
-		_invul = b;
-	}
-	
 	public function gotHit():Void {
 		if (PlayState.getInstance()._lifes > 0) {
 			PlayState.getInstance()._lifes--;
@@ -105,9 +101,12 @@ class Player extends Entity {
 			PlayState.getInstance()._sndplayerhit.play();
 			PlayState.getInstance().damagedEffect(this, 8);
 			
+			_invul = true;
+			Actuate.timer(1.2).onComplete(Actuate.apply, [this, { _invul: false }]);
+			
 		} else {
 			PlayState.getInstance()._sndexplosion.play();
-			setInvul(true);
+			_invul = true;
 			visible = false;
 			PlayState.getInstance()._bodyexplosions.push(new BodyExplosion(_layer, Std.int(x), Std.int(y)));
 			
@@ -115,15 +114,15 @@ class Player extends Entity {
 		}
 	}
 	
-	public function update(eTime:Int, eb:Array<EnemyBullet>):Void {
+	public function update(eTime:Int, eb:Array<Bullet>):Void {
 		
 		// collisions with enemy bullets
-		if (!_invul)
-			for (bullet in eb)
-				if (collision(bullet)) {
+		for (bullet in eb)
+			if (collision(bullet)) {
+				if (!_invul)
 					gotHit();
-					bullet.destroy();
-				}
+				bullet.destroy();
+			}
 		
 		_hspeed = _pright - _pleft;
 		_vspeed = _pdown - _pup;

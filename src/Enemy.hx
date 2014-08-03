@@ -18,26 +18,27 @@ class Enemy extends Entity {
 	private var _vclips:Array<TileClip>;
 	private var _mapstate:Map<String, Int>;
 	private var _curClip:TileClip;
+	private var _movingUp:Bool;
 	private var _movingDown:Bool;
-	private var _player:Player;
-	
+	private var _points:Int;
 	private var _health:Int;
 	
-	public function new(tl:TileLayer, pl:Player) {
+	public function new(tl:TileLayer, points:Int = 100) {
 		super(tl);
-		
-		_player = pl;
 		
 		x = 180;
 		y = 20 + Std.random(80);
 		
-		_health = 10;
+		_health = 12;
 		
 		_speed = 0.15;
+		_movingUp = false;
 		_movingDown = false;
+		_points = points;
 		
 		_vclips = new Array<TileClip>();
 		_mapstate = new Map<String, Int>();
+		
 		
 		var i:Int = 0;
 		for (value in Type.getEnumConstructs(EnemyStates)) {
@@ -57,12 +58,7 @@ class Enemy extends Entity {
 		_curClip.visible = true;
 		_hitbox = new Rectangle(x - 10, y - 8, 19, 10);
 		
-		Actuate.tween(this, 0.8, { x: x - 48 + Std.random(12) } ).delay(2).ease(Cubic.easeOut).onComplete(aistart);
-	}
-	
-	public function damage():Int {
-		
-		return _health;
+		Actuate.tween(this, 0.8, { x: x - 48 + Std.random(12) } ).delay(1.5).ease(Cubic.easeOut).onComplete(aistart);
 	}
 	
 	public function gotHit():Void {
@@ -70,19 +66,20 @@ class Enemy extends Entity {
 		
 		if (_health > 0) {
 			PlayState.getInstance().damagedEffect(this, 8);
+			PlayState.getInstance()._sndenemyhit.play();
 			
-			if (_health == 7) {
+			if (_health == 5) {
 				if (PlayState.getInstance()._enemiesKilled != 0 && PlayState.getInstance()._enemiesKilled % 5 == 0)
-					PlayState.getInstance()._enemies.push(new MiniEnemy(_layer, PlayState.getInstance()._player));
+					PlayState.getInstance()._enemies.push(new MiniEnemy(_layer));
 				else
-					PlayState.getInstance()._enemies.push(new Enemy(_layer, PlayState.getInstance()._player));
+					PlayState.getInstance()._enemies.push(new Enemy(_layer));
 			}
 				
 		} else {
 			kill();
 			PlayState.getInstance()._enemiesKilled++;
 			PlayState.getInstance()._sndexplosion.play();
-			PlayState.getInstance()._score += 10;
+			PlayState.getInstance()._score += _points;
 			PlayState.getInstance()._bodyexplosions.push(new BodyExplosion(_layer, Std.int(x), Std.int(y), _curClip.scale));
 		}
 	}
@@ -110,21 +107,27 @@ class Enemy extends Entity {
 	}
 	
 	public function aistart():Void {
-		updateClip(Std.string(playerleft));
+		updateClip(y);
 		Actuate.timer(0.5).onComplete(aishoot);
 	}
 	
-	private function updateClip(clipName:String):Void {
-		_curClip = _vclips[_mapstate.get(clipName)];
-		
-		if (clipName == "playerdown")
+	private function updateClip(ytarget:Float):Void {
+		if (y < ytarget) {
 			_movingDown = true;
-		else
+			_movingUp = false;
+			_curClip = _vclips[_mapstate.get(Std.string(playerdown))];
+		} else if (y > ytarget) {
 			_movingDown = false;
+			_movingUp = true;
+			_curClip = _vclips[_mapstate.get(Std.string(playerup))];
+		} else {
+			_movingDown = false;
+			_movingUp = false;
+			_curClip = _vclips[_mapstate.get(Std.string(playerleft))];
+		}
 	}
 	
 	public function kill():Void {
-		
 		for (clip in _vclips)
 			_layer.removeChild(clip);
 		
@@ -132,18 +135,14 @@ class Enemy extends Entity {
 	}
 	
 	public function shoot(x:Float, y:Float) {
-		var bullet = new EnemyBullet(_layer, Std.int(x), Std.int(y));
+		var bullet = new Bullet(_layer, Std.int(x), Std.int(y), PlayState.getInstance()._enemyBullets, -1);
 		PlayState.getInstance()._enemyBullets.push(bullet);
 	}
 	
 	public function aimovement():Void {
 		if (_health > 0) {
-			var ytarget = _player.y - 2;
-			if (y < ytarget) {
-				Actuate.timer(0.2).onComplete(updateClip, [Std.string(playerdown)]);
-			} else if (y > ytarget) {
-				Actuate.timer(0.2).onComplete(updateClip, [Std.string(playerup)]);
-			}
+			var ytarget = PlayState.getInstance()._player.y - 2;
+			Actuate.timer(0.2).onComplete(updateClip, [ytarget]);
 			
 			Actuate.tween(this, 1, { y: ytarget } ).ease(Cubic.easeInOut).onComplete(aistart);
 		}

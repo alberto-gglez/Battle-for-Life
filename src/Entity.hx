@@ -10,8 +10,8 @@ import openfl.geom.Rectangle;
 class Entity extends Sprite {
 	private var _layer:TileLayer;
 	
-	private var _vspeed:Int;
-	private var _hspeed:Int;
+	private var _vspeed:Float;
+	private var _hspeed:Float;
 	private var _speed:Float;
 	private var _hitbox:Rectangle;
 	

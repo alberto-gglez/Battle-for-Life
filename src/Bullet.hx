@@ -7,15 +7,16 @@ import openfl.geom.Rectangle;
 class Bullet extends Entity {
 
 	private var _clip:TileClip;
-	private static var _bullets:Array<Bullet>;
+	private var _bullets:Array<Bullet>;
+	private var _destroyed:Bool;
 	
-	public function new(tl:TileLayer, x:Int, y:Int, bullets:Array<Bullet>) {
+	public function new(tl:TileLayer, x:Int, y:Int, bullets:Array<Bullet>, hspeed:Float = 1, vspeed:Float = 0, speed:Float = 0.17) {
 		super(tl);
 		
 		this.x = x; this.y = y;
-		_vspeed = 0;
-		_hspeed = 1;
-		_speed = 0.17;
+		_vspeed = vspeed;
+		_hspeed = hspeed;
+		_speed = speed;
 		
 		_clip = new TileClip(_layer, "shoot", 10);
 		_clip.x = x; _clip.y = y;
@@ -24,22 +25,28 @@ class Bullet extends Entity {
 		_bullets = bullets;
 		
 		_hitbox = new Rectangle(x - _clip.width / 2, y - _clip.height / 2, _clip.width, _clip.height);
+		
+		_destroyed = false;
 	}
 	
 	public function update(eTime:Int) : Void {
 		x += eTime * _hspeed * _speed;
-		_clip.x = x;
+		y += eTime * _vspeed * _speed;
 		
-		if (x > 170) {
+		_clip.x = x; _clip.y = y;
+		
+		if (x < -10 || x > 170 || y < -10 || y > 124) {
 			destroy();
 		}
 		
 		_hitbox.x = x;
+		_hitbox.y = y;
 	}
 	
 	public function destroy():Void {
 		_bullets.remove(this);
 		_layer.removeChild(_clip);
+		_destroyed = true;
 	}
 	
 }
