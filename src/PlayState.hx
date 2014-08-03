@@ -169,7 +169,7 @@ class PlayState extends GameState {
 		Actuate.timer(0.2).onComplete(addChild, [_gamelayer.view]);
 		Actuate.timer(0.2).onComplete(addChild, [_rect]);
 		Actuate.timer(0.2).onComplete(addChild, [_uilayer.view]);
-		Actuate.timer(0.2).onComplete(_enemies.push, [new Enemy(_gamelayer, _player)]);
+		Actuate.timer(0.2).onComplete(_enemies.push, [new MiniEnemy(_gamelayer, _player)]);
 		//Actuate.timer(0.2).onComplete(addChild, [new FPS(100, 120, 0xFFFFFF)]);
 		Actuate.timer(0.2).onComplete(addChild, [_scoretxt]);
 		_prevTime = Lib.getTimer();
