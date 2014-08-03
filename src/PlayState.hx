@@ -103,6 +103,24 @@ class PlayState extends GameState {
 		addChild(_playerHitbox);
 	}
 	
+	public function enemyGotHit(e:Enemy):Void {
+		var health = e.damage();
+		if (health > 0) {
+			damagedEffect(e, 8);
+			
+			if (health == 3) {
+				_enemies.push(new Enemy(_gamelayer, _player));
+			
+				if (Std.random(10) == 0)
+					_enemies.push(new Enemy(_gamelayer, _player));
+			}
+				
+		} else {
+			e.kill(_enemies);
+			_score += 10;
+		}
+	}
+	
 	public function playerGotHit():Void {
 		if (_lifes > 0) {
 			_lifes--;
@@ -111,23 +129,23 @@ class PlayState extends GameState {
 			
 			_player.setInvul(true);
 			Actuate.timer(1.2).onComplete(_player.setInvul, [false]);
-			playerDamagedEffect(8);
+			damagedEffect(_player, 8);
 			
 		} else {
 			// you died
 		}
 	}
 	
-	public function playerDamagedEffect(p:Int):Void {
+	public function damagedEffect(e:Entity, p:Int):Void {
 		if (p == 0) {
-			_player.visible = true;
+			e.visible = true;
 		} else {
 			if (p % 2 == 0) {
-				_player.visible = false;
-				Actuate.timer(0.15).onComplete(playerDamagedEffect, [p - 1]);
+				e.visible = false;
+				Actuate.timer(0.15).onComplete(damagedEffect, [e, p - 1]);
 			} else {
-				_player.visible = true;
-				Actuate.timer(0.15).onComplete(playerDamagedEffect, [p - 1]);
+				e.visible = true;
+				Actuate.timer(0.15).onComplete(damagedEffect, [e, p - 1]);
 			}
 		}
 	}
@@ -167,7 +185,7 @@ class PlayState extends GameState {
 		_player.update(eTime, _enemyBullets);
 			
 		for (enemy in _enemies)
-			enemy.update(eTime);
+			enemy.update(eTime, _bullets);
 		
 		_gamelayer.render();
 		_uilayer.render();
@@ -187,7 +205,7 @@ class PlayState extends GameState {
 			_keysPressed.set(event.keyCode, true);
 			
 			if (event.keyCode == Keyboard.A && _bullets.length < _maxBullets) {
-				var bullet = new Bullet(_gamelayer, Std.int(_player.x + 14), Std.int(_player.y), _bullets);
+				var bullet = new Bullet(_gamelayer, Std.int(_player.x + 14), Std.int(_player.y - 3), _bullets);
 				_bullets.push(bullet);
 				_sndshoot.play();
 			}
@@ -199,7 +217,7 @@ class PlayState extends GameState {
 	public function enemyShoot(x:Float, y:Float) {
 		var bullet = new EnemyBullet(_gamelayer, Std.int(x), Std.int(y), _enemyBullets);
 		_enemyBullets.push(bullet);
-		_sndshoot.play();
+		//_sndshoot.play();
 	}
 	
 	public override function keyReleased(event:KeyboardEvent):Void {

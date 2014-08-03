@@ -56,7 +56,7 @@ class Player extends Entity {
 		_curClip = _vclips[_mapstate.get(Std.string(playerstand))];
 		_curClip.visible = true;
 		
-		_hitbox = new Rectangle(x, y - 8, 19, 10);
+		_hitbox = new Rectangle(x - 4, y - 8, 19, 10);
 	}
 	
 	public override function keyPressed	(event:KeyboardEvent) : Void {
@@ -93,10 +93,6 @@ class Player extends Entity {
 		}
 	}
 	
-	private function collision(eb:EnemyBullet):Bool {
-		return _hitbox.intersects(eb.hitbox());
-	}
-	
 	public function setInvul(b:Bool):Void {
 		_invul = b;
 	}
@@ -106,8 +102,10 @@ class Player extends Entity {
 		// collisions with enemy bullets
 		if (!_invul)
 			for (bullet in eb)
-				if (collision(bullet))
+				if (collision(bullet)) {
 					PlayState.getInstance().playerGotHit();
+					bullet.destroy();
+				}
 		
 		_hspeed = _pright - _pleft;
 		_vspeed = _pdown - _pup;

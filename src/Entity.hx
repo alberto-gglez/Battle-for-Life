@@ -27,6 +27,10 @@ class Entity extends Sprite {
 		return _hitbox;
 	}
 	
+	private function collision(e:Entity):Bool {
+		return _hitbox.intersects(e.hitbox());
+	}
+	
 	// Event management
 	public function keyPressed	(event:KeyboardEvent) : Void { }
 	public function keyReleased	(event:KeyboardEvent) : Void { }
