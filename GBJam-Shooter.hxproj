@@ -6,12 +6,12 @@
     <movie input="" />
     <movie path="application.xml" />
     <movie fps="60" />
-    <movie width="800" />
-    <movie height="480" />
+    <movie width="160" />
+    <movie height="144" />
     <movie version="3" />
     <movie minorVersion="0" />
     <movie platform="NME" />
-    <movie background="000000" />
+    <movie background="7F0000" />
     <movie preferredSDK=";3;" />
   </output>
   <!-- Other classes to be compiled into your SWF -->
@@ -21,7 +21,7 @@
     <class path="C:\HaxeToolkit\haxe\lib\tilelayer\0,2,0" />
     <class path="src" />
     <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,0\backends\native" />
-    <class path="bin\windows\neko\haxe" />
+    <class path="bin\windows\cpp\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>

@@ -18,7 +18,6 @@ class Player extends Entity {
 	
 	private var _vclips:Array<TileClip>;
 	private var _mapstate:Map<String, Int>;
-	private var _speed:Float;
 	private var _curClip:TileClip;
 	private var _movingDown:Bool;
 	
@@ -66,6 +65,9 @@ class Player extends Entity {
 				if (_hspeed == 0)
 					_hspeed -= 1;
 			}
+			case Keyboard.A: {
+				
+			}
 		}
 	}
 	
@@ -88,31 +90,37 @@ class Player extends Entity {
 					_hspeed = 0;
 			}
 		}
-
-		/*
-		var pKey = event.keyCode;
-		
-		if (pKey == Keyboard.UP || pKey == Keyboard.DOWN) {
-			_vspeed = 0;
-		} else if (pKey == Keyboard.LEFT || pKey == Keyboard.RIGHT) {
-			_hspeed = 0;
-		}
-		*/
 	}
 	
-	public override function update(eTime:Int):Void {
+	private function collision(eb:EnemyBullet):Bool {
+		if (eb.x - eb.width / 2 > _curClip.x - _curClip.width / 2 && eb.x + eb.width / 2 < _curClip.x + _curClip.width / 2)
+			if (eb.y - eb.height / 2 > _curClip.y - _curClip.height / 2 && eb.y + eb.height / 2 < _curClip.y + _curClip.height / 2)
+				return true;
+		
+		return false;
+	}
+	
+	public function update(eTime:Int, eb:Array<EnemyBullet>):Void {
+		
+		// collisions with enemy bullets
+		for (bullet in eb)
+			if (collision(bullet))
+				trace("te dio!");
+			else
+				trace(" ");
+		
 		x += _hspeed * eTime * _speed;
 		y += _vspeed * eTime * _speed;
 
-		if (x - _curClip.width / 2 < -6)
-			x = _curClip.width / 2 - 6;
-		else if (x + _curClip.width / 2 > 160)
-			x = 160 - _curClip.width / 2;
+		if (x - _curClip.width / 2 < -12)
+			x = _curClip.width / 2 - 12;
+		else if (x + _curClip.width / 2 > 100)
+			x = 100 - _curClip.width / 2;
 
 		if (y - _curClip.height / 2 < 0)
 			y = _curClip.height / 2;
-		else if (y + _curClip.height / 2 > 144 + 6)
-			y = 144 - _curClip.height / 2 + 6;
+		else if (y + _curClip.height / 2 > 144 - 30 + 6)
+			y = 144 - _curClip.height / 2 - 30 + 6;
 		
 		// select the correct sprite
 		if (_vspeed == 1) {
@@ -133,7 +141,7 @@ class Player extends Entity {
 		_curClip.visible = true;
 		_curClip.x = x; _curClip.y = y;
 		if (_movingDown)
-			_curClip.y -= 6;
+			_curClip.y -= 8;
 
 		_curClip.visible = true;
 		_movingDown = false;

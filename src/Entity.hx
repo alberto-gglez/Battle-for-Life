@@ -10,6 +10,7 @@ class Entity extends Sprite {
 	
 	private var _vspeed:Int;
 	private var _hspeed:Int;
+	private var _speed:Float;
 	
 	private function new(tl:TileLayer) {
 		super();
@@ -21,6 +22,6 @@ class Entity extends Sprite {
 	public function keyPressed	(event:KeyboardEvent) : Void { }
 	public function keyReleased	(event:KeyboardEvent) : Void { }
 	
-	public function update(eTime:Int) : Void { }
+	//public function update(eTime:Int, ?obj:Dynamic) : Void { }
 	
 }

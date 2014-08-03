@@ -8,6 +8,7 @@ import openfl.events.KeyboardEvent;
 import openfl.events.Event;
 import openfl.Assets;
 import openfl.Lib;
+import openfl.media.Sound;
 import openfl.text.TextField;
 import motion.Actuate;
 import aze.display.TileLayer;
@@ -20,6 +21,8 @@ class MainMenuState extends GameState {
 	
 	private var _info:TextField;
 	private var _layer:TileLayer;
+	private var _snd:Sound;
+	private var _alreadyPressed:Bool;
 	
 	private function new() {
 		super();
@@ -33,6 +36,10 @@ class MainMenuState extends GameState {
 		logo.y = 50;
 		_layer.addChild(logo);
 		
+		_snd = Assets.getSound("snd/gamestart.wav");
+		
+		_alreadyPressed = false;
+		
 		_info = new TextField();
 		_info.selectable = false; _info.embedFonts = true;
 		var font:String = Assets.getFont("fnt/gbb.ttf").fontName;
@@ -41,15 +48,16 @@ class MainMenuState extends GameState {
 		_info.autoSize = TextFieldAutoSize.NONE;
 		_info.htmlText = "Press any key";
 		ftextmenu0();
-		
 	}
 	
 	private function ftextmenu0() {
-		Actuate.tween(_info, 1, { alpha: 1 }).onComplete(ftextmenu1);
+		Actuate.timer(0.8).onComplete(ftextmenu1);
+		_info.visible = false;
 	}
 	
 	private function ftextmenu1() {
-		Actuate.tween(_info, 0.5, { alpha: 0 }).onComplete(ftextmenu0);
+		Actuate.timer(0.8).onComplete(ftextmenu0);
+		_info.visible = true;
 	}
 	
 	public static function getInstance():MainMenuState {
@@ -75,8 +83,12 @@ class MainMenuState extends GameState {
 	}
 	
 	public override function keyPressed	(event:KeyboardEvent) : Void {
-		Actuate.tween(Lib.current.stage, 0.5, { color: 0xFFFFFF });
-		changeState(PlayState.getInstance());
+		if (!_alreadyPressed) {
+			_alreadyPressed = true;
+			Lib.current.stage.color = 0xFFFFFF;
+			_snd.play();
+			Actuate.timer(1.8).onComplete(changeState, [PlayState.getInstance()]);
+		}
 	}
 	
 	/*
