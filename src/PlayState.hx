@@ -1,7 +1,6 @@
 package ;
 
 import openfl.display.Sprite;
-import openfl.geom.Rectangle;
 import openfl.Lib;
 import openfl.events.Event;
 import aze.display.SparrowTilesheet;
@@ -37,11 +36,15 @@ class PlayState extends GameState {
 	private var _special:Int;
 	private var _maxLifes:Int;
 	private var _lifes:Int;
+	private var _vlifes:Array<TileSprite>;
 	private var _score:Int;
 	
 	private var _sndshoot:Sound;
 	
 	private var _keysPressed:Map<Int, Bool>;
+	
+	public var _drawHitboxes:Bool;
+	public var _playerHitbox:Sprite;
 	
 	private function new() {
 		super();
@@ -64,15 +67,13 @@ class PlayState extends GameState {
 		_score = 0;
 		_lifes = 3;
 		_maxLifes = 3;
+		
+		_vlifes = new Array<TileSprite>();
+		
 		for (i in 0..._lifes) {
 			var llife = new TileSprite(_uilayer, "fullheart");
 			llife.x = 15 + i * 15; llife.y = 123;
-			_uilayer.addChild(llife);
-		}
-		
-		for (i in _lifes..._maxLifes) {
-			var llife = new TileSprite(_uilayer, "emptyheart");
-			llife.x = 15 + i * 15; llife.y = 123;
+			_vlifes.push(llife);
 			_uilayer.addChild(llife);
 		}
 		
@@ -89,6 +90,46 @@ class PlayState extends GameState {
 		
 		_enemies = new Array<Enemy>();
 		_enemyBullets = new Array<EnemyBullet>();
+		
+		_drawHitboxes = false;
+		
+		_playerHitbox = new Sprite();
+		_playerHitbox.visible = false;
+		_playerHitbox.x = _player.hitbox().x;
+		_playerHitbox.y = _player.hitbox().y;
+		_playerHitbox.graphics.beginFill(0x00FF00);
+		_playerHitbox.graphics.drawRect(0, 0, _player.hitbox().width, _player.hitbox().height);
+		_playerHitbox.graphics.endFill();
+		addChild(_playerHitbox);
+	}
+	
+	public function playerGotHit():Void {
+		if (_lifes > 0) {
+			_lifes--;
+			
+			_vlifes[_lifes].tile = "emptyheart";
+			
+			_player.setInvul(true);
+			Actuate.timer(1.2).onComplete(_player.setInvul, [false]);
+			playerDamagedEffect(8);
+			
+		} else {
+			// you died
+		}
+	}
+	
+	public function playerDamagedEffect(p:Int):Void {
+		if (p == 0) {
+			_player.visible = true;
+		} else {
+			if (p % 2 == 0) {
+				_player.visible = false;
+				Actuate.timer(0.15).onComplete(playerDamagedEffect, [p - 1]);
+			} else {
+				_player.visible = true;
+				Actuate.timer(0.15).onComplete(playerDamagedEffect, [p - 1]);
+			}
+		}
 	}
 	
 	public static function getInstance():PlayState {
@@ -131,6 +172,13 @@ class PlayState extends GameState {
 		_gamelayer.render();
 		_uilayer.render();
 		
+		if (_drawHitboxes) {
+			_playerHitbox.x = _player.hitbox().x;
+			_playerHitbox.y = _player.hitbox().y;
+			_playerHitbox.visible = true;
+		} else
+			_playerHitbox.visible = false;
+		
 		//trace("b:" + _bullets.length + " eb:" + _enemyBullets.length + " e:" + _enemies.length);
 	}
 	
@@ -159,12 +207,16 @@ class PlayState extends GameState {
 		_player.keyReleased(event);
 	}
 	
+	public override function frameEnded(event:Event):Void {
+		// ...
+	}
+	
 	/*
 	public function pause	() : Void { }
 	public function resume	() : Void { }
 	
 	
-	public function frameEnded		(event:Event) : Void { }
+	
 	*/
 	
 }

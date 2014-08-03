@@ -78,7 +78,7 @@ class Enemy extends Entity {
 	
 	public function aimovement():Void {
 		
-		var ytarget = _player.y;
+		var ytarget = _player.y - 4;
 		if (y < ytarget) {
 			Actuate.timer(0.2).onComplete(updateClip, [Std.string(playerdown)]);
 		} else if (y > ytarget) {

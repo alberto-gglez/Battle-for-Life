@@ -1,10 +1,13 @@
 package ;
 
+import motion.Actuate;
 import aze.display.TileLayer;
 import aze.display.TileClip;
 import openfl.events.KeyboardEvent;
+import openfl.geom.Rectangle;
 import openfl.ui.Keyboard;
 import openfl.Lib;
+import openfl.display.Sprite;
 
 enum PlayerStates {
 	playerstand;
@@ -20,6 +23,12 @@ class Player extends Entity {
 	private var _mapstate:Map<String, Int>;
 	private var _curClip:TileClip;
 	private var _movingDown:Bool;
+	private var _invul:Bool;
+	
+	private var _pright:Int;
+	private var _pleft:Int;
+	private var _pup:Int;
+	private var _pdown:Int;
 	
 	public function new(tl:TileLayer, x:Int, y:Int) {
 		super(tl);
@@ -27,6 +36,7 @@ class Player extends Entity {
 		this.x = x; this.y = y;
 		_speed = 0.15;
 		_movingDown = false;
+		_invul = false;
 		
 		_vclips = new Array<TileClip>();
 		_mapstate = new Map<String, Int>();
@@ -45,28 +55,23 @@ class Player extends Entity {
 		
 		_curClip = _vclips[_mapstate.get(Std.string(playerstand))];
 		_curClip.visible = true;
+		
+		_hitbox = new Rectangle(x, y - 8, 19, 10);
 	}
 	
 	public override function keyPressed	(event:KeyboardEvent) : Void {
 		switch (event.keyCode) {
 			case Keyboard.UP: {
-				if (_vspeed == 0)
-					_vspeed -= 1;
+				_pup = 1;
 			}
 			case Keyboard.DOWN: {
-				if (_vspeed == 0)
-					_vspeed += 1;
+				_pdown = 1;
 			}
 			case Keyboard.RIGHT: {
-				if (_hspeed == 0)
-					_hspeed += 1;
+				_pright = 1;
 			}
 			case Keyboard.LEFT: {
-				if (_hspeed == 0)
-					_hspeed -= 1;
-			}
-			case Keyboard.A: {
-				
+				_pleft = 1;
 			}
 		}
 	}
@@ -74,41 +79,39 @@ class Player extends Entity {
 	public override function keyReleased(event:KeyboardEvent):Void {
 		switch (event.keyCode) {
 			case Keyboard.UP: {
-				if (_vspeed == -1)
-					_vspeed = 0;
+				_pup = 0;
 			}
 			case Keyboard.DOWN: {
-				if (_vspeed == 1)
-					_vspeed = 0;
+				_pdown = 0;
 			}
 			case Keyboard.RIGHT: {
-				if (_hspeed == 1)
-					_hspeed = 0;
+				_pright = 0;
 			}
 			case Keyboard.LEFT: {
-				if (_hspeed == -1)
-					_hspeed = 0;
+				_pleft = 0;
 			}
 		}
 	}
 	
 	private function collision(eb:EnemyBullet):Bool {
-		if (eb.x - eb.width / 2 > _curClip.x - _curClip.width / 2 && eb.x + eb.width / 2 < _curClip.x + _curClip.width / 2)
-			if (eb.y - eb.height / 2 > _curClip.y - _curClip.height / 2 && eb.y + eb.height / 2 < _curClip.y + _curClip.height / 2)
-				return true;
-		
-		return false;
+		return _hitbox.intersects(eb.hitbox());
+	}
+	
+	public function setInvul(b:Bool):Void {
+		_invul = b;
 	}
 	
 	public function update(eTime:Int, eb:Array<EnemyBullet>):Void {
 		
 		// collisions with enemy bullets
-		for (bullet in eb)
-			if (collision(bullet))
-				trace("te dio!");
-			else
-				trace(" ");
+		if (!_invul)
+			for (bullet in eb)
+				if (collision(bullet))
+					PlayState.getInstance().playerGotHit();
 		
+		_hspeed = _pright - _pleft;
+		_vspeed = _pdown - _pup;
+					
 		x += _hspeed * eTime * _speed;
 		y += _vspeed * eTime * _speed;
 
@@ -138,13 +141,16 @@ class Player extends Entity {
 		for (i in _vclips)
 			i.visible = false;
 			
-		_curClip.visible = true;
+		if (visible)
+			_curClip.visible = true;
+			
 		_curClip.x = x; _curClip.y = y;
 		if (_movingDown)
 			_curClip.y -= 8;
 
-		_curClip.visible = true;
 		_movingDown = false;
+		
+		_hitbox.x = x - 4; _hitbox.y = y - 9;
 	}
 	
 }

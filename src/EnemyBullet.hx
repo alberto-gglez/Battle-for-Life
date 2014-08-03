@@ -2,6 +2,7 @@ package ;
 
 import aze.display.TileClip;
 import aze.display.TileLayer;
+import openfl.geom.Rectangle;
 
 // Copia de Bullet debido a un problema al recorrer el vector.
 class EnemyBullet extends Entity {
@@ -22,6 +23,8 @@ class EnemyBullet extends Entity {
 		_layer.addChild(_clip);
 		
 		_bullets = bullets;
+		
+		_hitbox = new Rectangle(x - _clip.width / 2, y - _clip.height / 2, _clip.width, _clip.height);
 	}
 	
 	public function update(eTime:Int) : Void {
@@ -31,6 +34,8 @@ class EnemyBullet extends Entity {
 		if (x < 0) {
 			destroy();
 		}
+		
+		_hitbox.x = x;
 	}
 	
 	public function destroy():Void {
