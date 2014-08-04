@@ -27,8 +27,8 @@ class PlayState extends GameState {
 	private var _uilayer:TileLayer;
 	
 	public var _player:Player;
-	private var _bullets:Array<Bullet>;
-	private var _maxBullets:Int;
+	public var _bullets:Array<Bullet>;
+	public var _maxBullets:Int;
 	
 	public var _enemyBullets:Array<Bullet>;
 	public var _enemiesKilled:Int;
@@ -46,7 +46,7 @@ class PlayState extends GameState {
 	public var _score:Int;
 	private var _scoretxt:TextField;
 	
-	private var _sndshoot:Sound;
+	public var _sndshoot:Sound;
 	public var _sndplayerhit:Sound;
 	public var _sndenemyhit:Sound;
 	public var _sndexplosion:Sound;
@@ -79,7 +79,7 @@ class PlayState extends GameState {
 		
 		_player = new Player(_gamelayer, 15, 50);
 		_bullets = new Array<Bullet>();
-		_maxBullets = 5;
+		_maxBullets = 4;
 		
 		_score = 0;
 		_lifes = 3;
@@ -174,8 +174,8 @@ class PlayState extends GameState {
 		Actuate.timer(0.2).onComplete(addChild, [_uilayer.view]);
 		Actuate.timer(0.2).onComplete(addChild, [_scoretxt]);
 		
-		EnemyManager.getInstance().init(_gamelayer, 5);
-		LevelManager.getInstance().init(_gamelayer, ["level", "level"]);
+		EnemyManager.getInstance().init(_gamelayer, 1);
+		LevelManager.getInstance().init(_gamelayer, ["level"]);
 		LevelManager.getInstance().startLevel(0);
 		
 		_prevTime = Lib.getTimer();
@@ -225,12 +225,6 @@ class PlayState extends GameState {
 	public override function keyPressed(event:KeyboardEvent):Void {
 		if (_keysPressed.get(event.keyCode) == null && !_gameOver) {
 			_keysPressed.set(event.keyCode, true);
-			
-			if (event.keyCode == Keyboard.A && _bullets.length < _maxBullets) {
-				var bullet = new Bullet(_gamelayer, Std.int(_player.x + 14), Std.int(_player.y - 3), _bullets);
-				_bullets.push(bullet);
-				_sndshoot.play();
-			}
 			
 			_player.keyPressed(event);
 		}

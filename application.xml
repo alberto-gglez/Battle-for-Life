@@ -24,6 +24,7 @@
 	<assets path="assets/img" rename="img" />
 	<assets path="assets/fonts" rename="fnt" />
 	<assets path="assets/sounds" rename="snd" />
+	<assets path="assets/levels" rename="lvl" />
 	
 	<!-- optimize output
 	<haxeflag name="-dce full" /> -->

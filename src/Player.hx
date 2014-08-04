@@ -73,6 +73,14 @@ class Player extends Entity {
 			case Keyboard.LEFT: {
 				_pleft = 1;
 			}
+			case Keyboard.A: {
+				var ps = PlayState.getInstance();
+				if (ps._bullets.length < ps._maxBullets) {
+					var bullet = new Bullet(_layer, Std.int(x + 14), Std.int(y - 3), ps._bullets);
+					ps._bullets.push(bullet);
+					ps._sndshoot.play();
+				}
+			}
 		}
 	}
 	
