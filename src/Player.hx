@@ -99,10 +99,10 @@ class Player extends Entity {
 			PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "emptyheart";
 			
 			PlayState.getInstance()._sndplayerhit.play();
-			PlayState.getInstance().damagedEffect(this, 8);
+			PlayState.getInstance().damagedEffect(this, 2, 0.1);
 			
-			_invul = true;
-			Actuate.timer(1.2).onComplete(Actuate.apply, [this, { _invul: false }]);
+			//_invul = true;
+			//Actuate.timer(1.2).onComplete(Actuate.apply, [this, { _invul: false }]);
 			
 		} else {
 			PlayState.getInstance()._sndexplosion.play();

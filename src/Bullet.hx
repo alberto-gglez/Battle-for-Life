@@ -35,7 +35,7 @@ class Bullet extends Entity {
 		
 		_clip.x = x; _clip.y = y;
 		
-		if (x < -10 || x > 170 || y < -10 || y > 124) {
+		if (x < -8 || x > 164 || y < -8 || y > 118) {
 			destroy();
 		}
 		

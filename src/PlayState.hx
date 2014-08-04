@@ -30,7 +30,6 @@ class PlayState extends GameState {
 	private var _bullets:Array<Bullet>;
 	private var _maxBullets:Int;
 	
-	public var _enemies:Array<Enemy>;
 	public var _enemyBullets:Array<Bullet>;
 	public var _enemiesKilled:Int;
 	
@@ -115,7 +114,6 @@ class PlayState extends GameState {
 		
 		_keysPressed = new Map<Int, Bool>();
 		
-		_enemies = new Array<Enemy>();
 		_enemyBullets = new Array<Bullet>();
 		_bodyexplosions = new Array<BodyExplosion>();
 		_enemiesKilled = 0;
@@ -145,17 +143,17 @@ class PlayState extends GameState {
 		_gameOver = true;
 	}
 	
-	public function damagedEffect(e:Entity, p:Int):Void {
+	public function damagedEffect(e:Entity, p:Int, t:Float):Void {
 		if (!_gameOver) {
 			if (p == 0) {
 				e.visible = true;
 			} else {
 				if (p % 2 == 0) {
 					e.visible = false;
-					Actuate.timer(0.15).onComplete(damagedEffect, [e, p - 1]);
+					Actuate.timer(t).onComplete(damagedEffect, [e, p - 1, t]);
 				} else {
 					e.visible = true;
-					Actuate.timer(0.15).onComplete(damagedEffect, [e, p - 1]);
+					Actuate.timer(t).onComplete(damagedEffect, [e, p - 1, t]);
 				}
 			}
 		} else
@@ -174,9 +172,12 @@ class PlayState extends GameState {
 		Actuate.timer(0.2).onComplete(addChild, [_gamelayer.view]);
 		Actuate.timer(0.2).onComplete(addChild, [_rect]);
 		Actuate.timer(0.2).onComplete(addChild, [_uilayer.view]);
-		Actuate.timer(0.2).onComplete(_enemies.push, [new Enemy(_gamelayer)]);
-		//Actuate.timer(0.2).onComplete(addChild, [new FPS(100, 120, 0xFFFFFF)]);
 		Actuate.timer(0.2).onComplete(addChild, [_scoretxt]);
+		
+		EnemyManager.getInstance().init(_gamelayer, 5);
+		LevelManager.getInstance().init(_gamelayer, ["level", "level"]);
+		LevelManager.getInstance().startLevel(0);
+		
 		_prevTime = Lib.getTimer();
 	}
 	
@@ -199,8 +200,7 @@ class PlayState extends GameState {
 		
 		_player.update(eTime, _enemyBullets);
 			
-		for (enemy in _enemies)
-			enemy.update(eTime, _bullets);
+		EnemyManager.getInstance().update(eTime, _bullets);
 			
 		for (explosion in _bodyexplosions)
 			explosion.update(eTime, _bodyexplosions);

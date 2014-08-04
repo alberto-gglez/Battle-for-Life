@@ -20,17 +20,17 @@
     <class path="C:\HaxeToolkit\haxe\lib\actuate\1,7,5" />
     <class path="C:\HaxeToolkit\haxe\lib\tilelayer\0,2,0" />
     <class path="src" />
-    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,0\backends\native" />
-    <class path="bin\windows\cpp\haxe" />
+    <class path="C:\HaxeToolkit\haxe\lib\openfl\2,0,0\backends\flash" />
+    <class path="bin\flash\haxe" />
   </classpaths>
   <!-- Build options -->
   <build>
-    <option directives="actuate=1.7.5&#xA;tilelayer=0.2.0&#xA;openfl=2.0.0&#xA;tools=1.5.6&#xA;lime_native&#xA;no-compilation&#xA;native&#xA;openfl-native&#xA;display&#xA;windows&#xA;desktop" />
+    <option directives="actuate=1.7.5&#xA;tilelayer=0.2.0&#xA;openfl=2.0.0&#xA;tools=1.5.6&#xA;openfl-flash&#xA;display&#xA;web" />
     <option flashStrict="False" />
     <option noInlineOnDebug="False" />
     <option mainClass="ApplicationMain" />
     <option enabledebug="True" />
-    <option additional="--no-output&#xA;--remap flash:openfl&#xA;#--macro keep(&quot;Main&quot;)" />
+    <option additional="--no-output&#xA;-swf-version 11.2" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

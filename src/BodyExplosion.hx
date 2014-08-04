@@ -63,8 +63,12 @@ class BodyExplosion extends Sprite {
 				cont++;
 		}
 		
-		if (cont == _pieces.length)
+		if (cont == _pieces.length) {
+			for (p in _pieces)
+				_layer.removeChild(p);
+			
 			es.remove(this);
+		}
 		
 	}
 	

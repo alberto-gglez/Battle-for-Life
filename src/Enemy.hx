@@ -22,12 +22,15 @@ class Enemy extends Entity {
 	private var _movingDown:Bool;
 	private var _points:Int;
 	private var _health:Int;
+	private var _group:EnemyGroup;
 	
-	public function new(tl:TileLayer, points:Int = 100) {
+	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int) {
 		super(tl);
 		
-		x = 180;
-		y = 20 + Std.random(80);
+		_group = group;
+		
+		x = xp;
+		y = yp;
 		
 		_health = 12;
 		
@@ -56,8 +59,10 @@ class Enemy extends Entity {
 		_curClip = _vclips[_mapstate.get(Std.string(playerleft))];
 		
 		_curClip.visible = true;
-		_hitbox = new Rectangle(x - 10, y - 8, 19, 10);
-		
+		_hitbox = new Rectangle(x - 10, y - 7, 19, 11);
+	}
+	
+	public function init():Void {
 		Actuate.tween(this, 0.8, { x: x - 48 + Std.random(12) } ).delay(1.5).ease(Cubic.easeOut).onComplete(aistart);
 	}
 	
@@ -65,16 +70,8 @@ class Enemy extends Entity {
 		_health--;
 		
 		if (_health > 0) {
-			PlayState.getInstance().damagedEffect(this, 8);
+			PlayState.getInstance().damagedEffect(this, 2, 0.1);
 			PlayState.getInstance()._sndenemyhit.play();
-			
-			if (_health == 5) {
-				if (PlayState.getInstance()._enemiesKilled != 0 && PlayState.getInstance()._enemiesKilled % 5 == 0)
-					PlayState.getInstance()._enemies.push(new MiniEnemy(_layer));
-				else
-					PlayState.getInstance()._enemies.push(new Enemy(_layer));
-			}
-				
 		} else {
 			kill();
 			PlayState.getInstance()._enemiesKilled++;
@@ -103,7 +100,7 @@ class Enemy extends Entity {
 		if (_movingDown)
 			_curClip.y -= 8;
 		
-		_hitbox.x = x - 10; _hitbox.y = y - 9;
+		_hitbox.x = x - 10; _hitbox.y = y - 7;
 	}
 	
 	public function aistart():Void {
@@ -131,7 +128,7 @@ class Enemy extends Entity {
 		for (clip in _vclips)
 			_layer.removeChild(clip);
 		
-		PlayState.getInstance()._enemies.remove(this);
+		_group.remove(this);
 	}
 	
 	public function shoot(x:Float, y:Float) {
