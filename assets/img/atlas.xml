@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:dc868e803e7b69a9152d5b6674770b32:e9373f956837c8bd1c71b30d12e3f1e8:cde709370900f12288f3449eded86f07$ -->
+<!-- $TexturePacker:SmartUpdate:0caf8caa9fed7b61161727501804fdef:120c8f939be7e29194d17565b23287a7:cde709370900f12288f3449eded86f07$ -->
 <TextureAtlas imagePath="atlas.png">
     <SubTexture name="bigbullet_0" x="2" y="2" width="11" height="11"/>
     <SubTexture name="bigbullet_1" x="15" y="2" width="11" height="11"/>
@@ -19,7 +19,6 @@
     <SubTexture name="playerdown_1" x="35" y="15" width="31" height="19"/>
     <SubTexture name="playerleft_0" x="68" y="15" width="31" height="19"/>
     <SubTexture name="playerleft_1" x="101" y="15" width="31" height="19"/>
-    <SubTexture name="playerright_0" x="134" y="15" width="31" height="19"/>
     <SubTexture name="playerstand_0" x="134" y="15" width="31" height="19"/>
     <SubTexture name="playerstand_1" x="2" y="36" width="31" height="19"/>
     <SubTexture name="playerstand_2" x="35" y="36" width="31" height="19"/>

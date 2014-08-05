@@ -12,7 +12,7 @@ class BigBullet extends Bullet {
 		super(tl, x, y, bullets, -1);
 		
 		_layer.removeChild(_clip);
-		_clip = new TileClip(_layer, "bigbullet", 10);
+		_clip = new TileClip(_layer, "bigbullet", 8);
 		_clip.x = x; _clip.y = y;
 		_layer.addChild(_clip);
 		

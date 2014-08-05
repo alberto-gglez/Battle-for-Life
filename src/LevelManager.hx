@@ -71,7 +71,7 @@ class LevelManager extends Sprite {
 					startLevel(_currentLevel);
 				} else {
 					// game end
-					trace("game completed");
+					//trace("game completed");
 				}
 			}
 		}

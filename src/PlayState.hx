@@ -74,7 +74,7 @@ class PlayState extends GameState {
 		_sndbigbullet = Assets.getSound("snd/bigbullet.wav");
 		
 		_rect = new Sprite();
-		_rect.graphics.beginFill(0x000000);
+		_rect.graphics.beginFill(0x133C2E);
 		_rect.graphics.drawRect(0, 114, 160, 30);
 		
 		_player = new Player(_gamelayer, 15, 50);
@@ -87,7 +87,7 @@ class PlayState extends GameState {
 		_scoretxt = new TextField();
 		_scoretxt.selectable = false; _scoretxt.embedFonts = true;
 		var font:String = Assets.getFont("fnt/gbb.ttf").fontName;
-		_scoretxt.defaultTextFormat = new TextFormat(font, 20, 0x808080);
+		_scoretxt.defaultTextFormat = new TextFormat(font, 20, 0x517E39);
 		_scoretxt.x = 62; _scoretxt.y = 112;
 		_scoretxt.autoSize = TextFieldAutoSize.NONE;
 		_scoretxt.text = "00000000";
@@ -135,8 +135,8 @@ class PlayState extends GameState {
 		
 		txt.selectable = false; txt.embedFonts = true;
 		var font:String = Assets.getFont("fnt/gbb.ttf").fontName;
-		txt.defaultTextFormat = new TextFormat(font, 16, 0x000000);
-		txt.x = 40; txt.y = 40;
+		txt.defaultTextFormat = new TextFormat(font, 16, 0x133C2E);
+		txt.x = 39; txt.y = 40;
 		txt.autoSize = TextFieldAutoSize.NONE;
 		txt.text = "GAME OVER";
 		Actuate.timer(2).onComplete(addChild, [txt]);

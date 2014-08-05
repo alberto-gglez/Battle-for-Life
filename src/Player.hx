@@ -14,7 +14,6 @@ enum PlayerStates {
 	playerup;
 	playerdown;
 	playerleft;
-	playerright;
 }
 
 class Player extends Entity {
@@ -103,8 +102,8 @@ class Player extends Entity {
 	
 	public function gotHit():Void {
 		if (PlayState.getInstance()._lifes > 0) {
-			PlayState.getInstance()._lifes--;
-			PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "emptyheart";
+			//PlayState.getInstance()._lifes--;
+			//PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "emptyheart";
 			
 			PlayState.getInstance()._sndplayerhit.play();
 			PlayState.getInstance().damagedEffect(this, 2, 0.1);

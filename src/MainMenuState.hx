@@ -43,7 +43,7 @@ class MainMenuState extends GameState {
 		_info = new TextField();
 		_info.selectable = false; _info.embedFonts = true;
 		var font:String = Assets.getFont("fnt/gbb.ttf").fontName;
-		_info.defaultTextFormat = new TextFormat(font, 16, 0x000000);
+		_info.defaultTextFormat = new TextFormat(font, 16, 0x133C2E);
 		_info.x = 32; _info.y = 94;
 		_info.autoSize = TextFieldAutoSize.NONE;
 		_info.htmlText = "Press any key";
@@ -69,7 +69,7 @@ class MainMenuState extends GameState {
 	
 	// Event management
 	public override function enter	() : Void {
-		Lib.current.stage.color = 0x7F0000;
+		Lib.current.stage.color = 0xD6E894;
 		addChild(_layer.view);
 		addChild(_info);
 	}
@@ -86,7 +86,6 @@ class MainMenuState extends GameState {
 	public override function keyPressed	(event:KeyboardEvent) : Void {
 		if (!_alreadyPressed) {
 			_alreadyPressed = true;
-			Lib.current.stage.color = 0xFFFFFF;
 			_snd.play();
 			Actuate.timer(1.8).onComplete(changeState, [PlayState.getInstance()]);
 		}
