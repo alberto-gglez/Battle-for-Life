@@ -40,8 +40,23 @@ class BodyExplosion extends Sprite {
 			tile.x = x; tile.y = y;
 			tile.rotation = Std.random(360);
 			tile.mirror = Std.random(3);
-			tile._hspeed = 1 - Std.random(3);
-			tile._vspeed = 1 - Std.random(3);
+			tile._hspeed = (100 - Std.random(200)) / 100;
+			tile._vspeed = (100 - Std.random(200)) / 100;
+			tile.scale = sc;
+			
+			_pieces.push(tile);
+			_layer.addChild(tile);
+		}
+
+		// more blood!
+		for (i in 0...10) {
+			var tile = new BodyPiece(_layer, "piece" + (5 + Std.random(2)));
+			
+			tile.x = x; tile.y = y;
+			tile.rotation = Std.random(360);
+			tile.mirror = Std.random(3);
+			tile._hspeed = (100 - Std.random(200)) / 100;
+			tile._vspeed = (100 - Std.random(200)) / 100;
 			tile.scale = sc;
 			
 			_pieces.push(tile);

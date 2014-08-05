@@ -48,7 +48,7 @@ class MiniEnemy extends Enemy {
 				ytarget = y - 30 - Std.random(30);
 				
 			if (ytarget - _curClip.height / 2 < 5)
-				ytarget = _curClip.height / 2;
+				ytarget = _curClip.height / 2 + 5;
 			else if (ytarget + _curClip.height / 2 > 144 - 30)
 				ytarget = 144 - _curClip.height / 2 - 30;
 			
@@ -60,7 +60,7 @@ class MiniEnemy extends Enemy {
 	
 	public override function aishoot():Void {
 		if (_health > 0 && !PlayState.getInstance()._gameOver) {
-			var xb = x - 12; var yb = y - 3;
+			var xb = x - 10; var yb = y - 3;
 			
 			bigShoot(xb, yb);
 			
