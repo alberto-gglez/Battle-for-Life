@@ -6,21 +6,21 @@ import motion.Actuate;
 
 class EnemyGroup extends Sprite {
 
-	private var _enemies:Array<Enemy>;
+	private var _enemies:Array<BasicEnemy>;
 	private var _layer:TileLayer;
 	
 	public function new(tl:TileLayer) {
 		super();
 		
 		_layer = tl;
-		_enemies = new Array<Enemy>();
+		_enemies = new Array<BasicEnemy>();
 	}
 	
 	public function reset():Void {
 		for (e in _enemies)
 			e.removeClips();
 			
-		_enemies = new Array<Enemy>();
+		_enemies = new Array<BasicEnemy>();
 	}
 	
 	private function halfTop():Int {
@@ -36,7 +36,7 @@ class EnemyGroup extends Sprite {
 	}
 	
 	private function addNormalEnemy(ypos:Int):Void {
-		var e = new Enemy(_layer, this, 100, 180, ypos);
+		var e = new BasicEnemy(_layer, this, 100, 180, ypos);
 		e.init();
 		_enemies.push(e);
 	}
@@ -75,7 +75,7 @@ class EnemyGroup extends Sprite {
 		}
 	}
 	
-	public function remove(e:Enemy):Void {
+	public function remove(e:BasicEnemy):Void {
 		_enemies.remove(e);
 		
 		if (_enemies.length == 0)

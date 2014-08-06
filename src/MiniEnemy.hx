@@ -5,7 +5,7 @@ import aze.display.TileClip;
 import motion.Actuate;
 import motion.easing.Cubic;
 
-class MiniEnemy extends Enemy {
+class MiniEnemy extends BasicEnemy {
 	
 	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int) {
 		super(tl, group, points, xp, yp);
