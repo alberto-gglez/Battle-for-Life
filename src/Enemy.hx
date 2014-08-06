@@ -9,5 +9,6 @@ class Enemy extends Entity {
 	}
 	
 	public function update(eTime:Int, b:Array<Bullet>):Void { }
+	public function removeClips():Void {}
 	
 }

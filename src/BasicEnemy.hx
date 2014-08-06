@@ -124,7 +124,7 @@ class BasicEnemy extends Enemy {
 		}
 	}
 	
-	public function removeClips():Void {
+	public override function removeClips():Void {
 		for (clip in _vclips)
 			_layer.removeChild(clip);
 	}

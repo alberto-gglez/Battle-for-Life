@@ -6,21 +6,21 @@ import motion.Actuate;
 
 class EnemyGroup extends Sprite {
 
-	private var _enemies:Array<BasicEnemy>;
+	private var _enemies:Array<Enemy>;
 	private var _layer:TileLayer;
 	
 	public function new(tl:TileLayer) {
 		super();
 		
 		_layer = tl;
-		_enemies = new Array<BasicEnemy>();
+		_enemies = new Array<Enemy>();
 	}
 	
 	public function reset():Void {
 		for (e in _enemies)
 			e.removeClips();
 			
-		_enemies = new Array<BasicEnemy>();
+		_enemies = new Array<Enemy>();
 	}
 	
 	private function halfTop():Int {
@@ -35,7 +35,7 @@ class EnemyGroup extends Sprite {
 		return 10 + Std.random(90);
 	}
 	
-	private function addNormalEnemy(ypos:Int):Void {
+	private function addBasicEnemy(ypos:Int):Void {
 		var e = new BasicEnemy(_layer, this, 100, 180, ypos);
 		e.init();
 		_enemies.push(e);
@@ -51,12 +51,12 @@ class EnemyGroup extends Sprite {
 		switch (n) {
 			case 0: {
 				// 1 normal enemy
-				addNormalEnemy(wholeScreen());
+				addBasicEnemy(wholeScreen());
 			}
 			case 1: {
 				// 2 normal enemies
-				addNormalEnemy(halfBottom());
-				Actuate.timer(1).onComplete(addNormalEnemy, [halfTop()]);
+				addBasicEnemy(halfBottom());
+				Actuate.timer(1).onComplete(addBasicEnemy, [halfTop()]);
 			}
 			case 2: {
 				// 1 minienemy
@@ -65,17 +65,22 @@ class EnemyGroup extends Sprite {
 			case 3: {
 				// 1 normal enemy, 1 minienemy
 				addMiniEnemy(halfTop());
-				Actuate.timer(2).onComplete(addNormalEnemy, [halfBottom()]);
+				Actuate.timer(2).onComplete(addBasicEnemy, [halfBottom()]);
 			}
 			case 4: {
 				// 2 normal enemies, 1 minienemy
 				create(1);
 				Actuate.timer(3.5).onComplete(create, [2]);
 			}
+			case 5: {
+				var e = new FirstBoss(_layer, this);
+				//e.init();
+				_enemies.push(e);
+			}
 		}
 	}
 	
-	public function remove(e:BasicEnemy):Void {
+	public function remove(e:Enemy):Void {
 		_enemies.remove(e);
 		
 		if (_enemies.length == 0)
