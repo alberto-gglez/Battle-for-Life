@@ -20,24 +20,15 @@ class BasicEnemy extends Enemy {
 	private var _curClip:TileClip;
 	private var _movingUp:Bool;
 	private var _movingDown:Bool;
-	private var _points:Int;
-	private var _health:Int;
-	private var _group:EnemyGroup;
 	
 	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int) {
 		super(tl, group, points, xp, yp);
-		
-		_group = group;
-		
-		x = xp;
-		y = yp;
 		
 		_health = 12;
 		
 		_speed = 0.15;
 		_movingUp = false;
 		_movingDown = false;
-		_points = points;
 		
 		_vclips = new Array<TileClip>();
 		_mapstate = new Map<String, Int>();
