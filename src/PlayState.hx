@@ -131,9 +131,6 @@ class PlayState extends GameState {
 	
 	// Event management
 	public override function enter():Void {
-		_gamelayer.removeAllChildren();
-		_uilayer.removeAllChildren();
-		
 		_player = new Player(_gamelayer, 15, 50);
 		_bullets = new Array<Bullet>();
 		
@@ -185,6 +182,8 @@ class PlayState extends GameState {
 	
 	public override function exit():Void {
 		removeChildren();
+		_gamelayer.removeAllChildren();
+		_uilayer.removeAllChildren();
 		EnemyManager.getInstance().reset();
 		LevelManager.getInstance().reset();
 	}
