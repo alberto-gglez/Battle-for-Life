@@ -41,6 +41,13 @@ class EnemyManager extends Sprite {
 		}
 	}
 	
+	public function reset():Void {
+		for (g in _groups)
+			g.reset();
+		
+		_unused = _groups.copy();
+	}
+	
 	public function getGroup():EnemyGroup {
 		if (_initialized) {
 			if (_unused.length > 0)

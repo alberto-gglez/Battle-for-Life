@@ -1,6 +1,7 @@
 package ;
 
 import openfl.display.Bitmap;
+import openfl.display.FPS;
 import openfl.display.Sprite;
 import openfl.events.Event;
 import openfl.Assets;
@@ -58,5 +59,6 @@ class Main extends Sprite {
 		Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = openfl.display.StageScaleMode.EXACT_FIT;
 		Lib.current.addChild(new Main());
+		//Lib.current.addChild(new FPS());
 	}
 }

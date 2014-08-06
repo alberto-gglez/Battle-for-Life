@@ -12,9 +12,15 @@ class EnemyGroup extends Sprite {
 	public function new(tl:TileLayer) {
 		super();
 		
-		_enemies = new Array<Enemy>();
 		_layer = tl;
-		
+		_enemies = new Array<Enemy>();
+	}
+	
+	public function reset():Void {
+		for (e in _enemies)
+			e.removeClips();
+			
+		_enemies = new Array<Enemy>();
 	}
 	
 	private function halfTop():Int {
@@ -36,7 +42,7 @@ class EnemyGroup extends Sprite {
 	}
 	
 	private function addMiniEnemy(ypos:Int):Void {
-		var e = new MiniEnemy(_layer, this, 150, 180, ypos);
+		var e = new MiniEnemy(_layer, this, 200, 180, ypos);
 		e.init();
 		_enemies.push(e);
 	}

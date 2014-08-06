@@ -43,6 +43,10 @@ class LevelManager extends Sprite {
 		}
 	}
 	
+	public function reset():Void {
+		_active = false;
+	}
+	
 	public function startLevel(n:Int, eg:Int = 0):Void {
 		if (!_active && n >= 0 && n < _levels.length) {
 			//trace("new level [" + n + "]");

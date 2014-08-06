@@ -76,7 +76,7 @@ class Enemy extends Entity {
 			kill();
 			PlayState.getInstance()._enemiesKilled++;
 			PlayState.getInstance()._sndexplosion.play();
-			PlayState.getInstance()._score += _points;
+			PlayState.getInstance()._score += _points * PlayState.getInstance()._gameMode;
 			PlayState.getInstance()._bodyexplosions.push(new BodyExplosion(_layer, Std.int(x), Std.int(y), _curClip.scale));
 		}
 	}
@@ -124,9 +124,13 @@ class Enemy extends Entity {
 		}
 	}
 	
-	public function kill():Void {
+	public function removeClips():Void {
 		for (clip in _vclips)
 			_layer.removeChild(clip);
+	}
+	
+	public function kill():Void {
+		removeClips();
 		
 		_group.remove(this);
 	}

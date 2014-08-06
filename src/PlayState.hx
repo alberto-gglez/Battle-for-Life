@@ -45,6 +45,7 @@ class PlayState extends GameState {
 	public var _vlifes:Array<TileSprite>;
 	public var _score:Int;
 	private var _scoretxt:TextField;
+	private var _gameOverTxt:TextField;
 	
 	public var _sndshoot:Sound;
 	public var _sndplayerhit:Sound;
@@ -54,10 +55,9 @@ class PlayState extends GameState {
 	
 	private var _keysPressed:Map<Int, Bool>;
 	
-	public var _drawHitboxes:Bool;
-	public var _playerHitbox:Sprite;
-	
 	public var _gameOver:Bool;
+	public var _canReset:Bool;
+	public var _gameMode:Int;
 	
 	private function new() {
 		super();
@@ -77,13 +77,11 @@ class PlayState extends GameState {
 		_rect.graphics.beginFill(0x133C2E);
 		_rect.graphics.drawRect(0, 114, 160, 30);
 		
-		_player = new Player(_gamelayer, 15, 50);
-		_bullets = new Array<Bullet>();
 		_maxBullets = 4;
-		
-		_score = 0;
-		_lifes = 3;
 		_maxLifes = 3;
+		_maxSpecial = 3;
+		_gameMode = 1;
+		
 		_scoretxt = new TextField();
 		_scoretxt.selectable = false; _scoretxt.embedFonts = true;
 		var font:String = Assets.getFont("fnt/gbb.ttf").fontName;
@@ -92,54 +90,18 @@ class PlayState extends GameState {
 		_scoretxt.autoSize = TextFieldAutoSize.NONE;
 		_scoretxt.text = "00000000";
 		
-		_vlifes = new Array<TileSprite>();
-		
-		_gameOver = false;
-		
-		for (i in 0..._lifes) {
-			var llife = new TileSprite(_uilayer, "fullheart");
-			llife.x = 15 + i * 15; llife.y = 123;
-			_vlifes.push(llife);
-			_uilayer.addChild(llife);
-		}
-		
-		_maxSpecial = 3;
-		_special = 3;
-		
-		for (i in 0..._special) {
-			var lspecial = new TileClip(_uilayer, "special", 3);
-			lspecial.x = 15 + i * 15; lspecial.y = 136;
-			_uilayer.addChild(lspecial);
-		}
-		
-		_keysPressed = new Map<Int, Bool>();
-		
-		_enemyBullets = new Array<Bullet>();
-		_bodyexplosions = new Array<BodyExplosion>();
-		_enemiesKilled = 0;
-		
-		_drawHitboxes = false;
-		
-		_playerHitbox = new Sprite();
-		_playerHitbox.visible = false;
-		_playerHitbox.x = _player.hitbox().x;
-		_playerHitbox.y = _player.hitbox().y;
-		_playerHitbox.graphics.beginFill(0x00FF00);
-		_playerHitbox.graphics.drawRect(0, 0, _player.hitbox().width, _player.hitbox().height);
-		_playerHitbox.graphics.endFill();
-		addChild(_playerHitbox);
+		_gameOverTxt = new TextField();
+		_gameOverTxt.visible = false;
+		_gameOverTxt.selectable = false; _gameOverTxt.embedFonts = true;
+		_gameOverTxt.defaultTextFormat = new TextFormat(font, 16, 0x133C2E);
+		_gameOverTxt.x = 39; _gameOverTxt.y = 40;
+		_gameOverTxt.autoSize = TextFieldAutoSize.NONE;
+		_gameOverTxt.text = "GAME OVER";
 	}
 	
 	public function gameOver():Void {
-		var txt = new TextField();
-		
-		txt.selectable = false; txt.embedFonts = true;
-		var font:String = Assets.getFont("fnt/gbb.ttf").fontName;
-		txt.defaultTextFormat = new TextFormat(font, 16, 0x133C2E);
-		txt.x = 39; txt.y = 40;
-		txt.autoSize = TextFieldAutoSize.NONE;
-		txt.text = "GAME OVER";
-		Actuate.timer(2).onComplete(addChild, [txt]);
+		Actuate.timer(2).onComplete(Actuate.apply, [_gameOverTxt, { visible: true }]);
+		Actuate.timer(2).onComplete(Actuate.apply, [ this, { _canReset: true } ]);
 		_gameOver = true;
 	}
 	
@@ -169,10 +131,50 @@ class PlayState extends GameState {
 	
 	// Event management
 	public override function enter():Void {
+		_gamelayer.removeAllChildren();
+		_uilayer.removeAllChildren();
+		
+		_player = new Player(_gamelayer, 15, 50);
+		_bullets = new Array<Bullet>();
+		
+		_score = 0;
+		_special = 3;
+		
+		if (_gameMode == 3)
+			_lifes = 1;
+		else
+			_lifes = 3;
+		
+		_vlifes = new Array<TileSprite>();
+		for (i in 0..._lifes) {
+			var llife = new TileSprite(_uilayer, "fullheart");
+			llife.x = 15 + i * 15; llife.y = 123;
+			_vlifes.push(llife);
+			_uilayer.addChild(llife);
+		}
+		
+		for (i in 0..._special) {
+			var lspecial = new TileClip(_uilayer, "special", 3);
+			lspecial.x = 15 + i * 15; lspecial.y = 136;
+			_uilayer.addChild(lspecial);
+		}
+		
+		_keysPressed = new Map<Int, Bool>();
+		
+		_enemyBullets = new Array<Bullet>();
+		_bodyexplosions = new Array<BodyExplosion>();
+		_enemiesKilled = 0;
+		
+		_gameOverTxt.visible = false;
+		
+		_canReset = false;
+		_gameOver = false;
+		
 		Actuate.timer(0.2).onComplete(addChild, [_gamelayer.view]);
 		Actuate.timer(0.2).onComplete(addChild, [_rect]);
 		Actuate.timer(0.2).onComplete(addChild, [_uilayer.view]);
 		Actuate.timer(0.2).onComplete(addChild, [_scoretxt]);
+		addChild(_gameOverTxt);
 		
 		EnemyManager.getInstance().init(_gamelayer, 1);
 		LevelManager.getInstance().init(_gamelayer, ["level"]);
@@ -182,15 +184,15 @@ class PlayState extends GameState {
 	}
 	
 	public override function exit():Void {
-		removeChild(_gamelayer.view);
-		removeChild(_uilayer.view);
-		removeChild(_rect);
+		removeChildren();
+		EnemyManager.getInstance().reset();
+		LevelManager.getInstance().reset();
 	}
 	
 	public override function frameStarted(event:Event):Void {
 		
 		var curTime = Lib.getTimer(); var eTime = curTime - _prevTime;
-		_prevTime = Lib.getTimer();
+		_prevTime = curTime;
 		
 		for (bullet in _bullets)
 			bullet.update(eTime);
@@ -208,13 +210,6 @@ class PlayState extends GameState {
 		_gamelayer.render();
 		_uilayer.render();
 		
-		if (_drawHitboxes) {
-			_playerHitbox.x = _player.hitbox().x;
-			_playerHitbox.y = _player.hitbox().y;
-			_playerHitbox.visible = true;
-		} else
-			_playerHitbox.visible = false;
-			
 		_scoretxt.text = Std.string(_score);
 		for (i in 0...(8 - _scoretxt.text.length))
 			_scoretxt.text = "0" + _scoretxt.text;
@@ -227,6 +222,8 @@ class PlayState extends GameState {
 			_keysPressed.set(event.keyCode, true);
 			
 			_player.keyPressed(event);
+		} else if (_canReset) {
+			changeState(MainMenuState.getInstance());
 		}
 	}
 	
@@ -235,11 +232,9 @@ class PlayState extends GameState {
 		_player.keyReleased(event);
 	}
 	
-	public override function frameEnded(event:Event):Void {
-		// ...
-	}
 	
 	/*
+	public override function frameEnded(event:Event):Void { }
 	public function pause	() : Void { }
 	public function resume	() : Void { }
 	

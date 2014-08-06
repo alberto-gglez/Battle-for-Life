@@ -101,20 +101,25 @@ class Player extends Entity {
 	}
 	
 	public function gotHit():Void {
+
+		PlayState.getInstance()._lifes--;
+		PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "emptyheart";
+		
 		if (PlayState.getInstance()._lifes > 0) {
-			//PlayState.getInstance()._lifes--;
-			//PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "emptyheart";
-			
-			PlayState.getInstance()._sndplayerhit.play();
-			PlayState.getInstance().damagedEffect(this, 2, 0.1);
-			
-			//_invul = true;
-			//Actuate.timer(1.2).onComplete(Actuate.apply, [this, { _invul: false }]);
+			if (!_invul) {
+				PlayState.getInstance()._sndplayerhit.play();
+				
+				if (PlayState.getInstance()._gameMode == 1) { // easy
+					PlayState.getInstance().damagedEffect(this, 10, 0.1);
+					_invul = true;
+					Actuate.timer(1).onComplete(Actuate.apply, [this, { _invul: false }]);
+				} else // hard or insane
+					PlayState.getInstance().damagedEffect(this, 2, 0.1);
+			}
 			
 		} else {
-			PlayState.getInstance()._sndexplosion.play();
-			_invul = true;
 			visible = false;
+			PlayState.getInstance()._sndexplosion.play();
 			PlayState.getInstance()._bodyexplosions.push(new BodyExplosion(_layer, Std.int(x), Std.int(y)));
 			
 			PlayState.getInstance().gameOver();
@@ -125,9 +130,10 @@ class Player extends Entity {
 		
 		// collisions with enemy bullets
 		for (bullet in eb)
-			if (collision(bullet)) {
+			if (collision(bullet) && PlayState.getInstance()._lifes > 0) {
 				if (!_invul)
 					gotHit();
+				
 				bullet.destroy();
 			}
 		
