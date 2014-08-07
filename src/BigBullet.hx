@@ -8,7 +8,7 @@ import motion.easing.Quad;
 
 class BigBullet extends Bullet {
 	
-	public function new(tl:TileLayer, x:Int, y:Int, bullets:Array<Bullet>) {
+	public function new(tl:TileLayer, x:Float, y:Float, bullets:Array<Bullet>, xdest:Float, ydest:Float) {
 		super(tl, x, y, bullets, -1);
 		
 		_layer.removeChild(_clip);
@@ -18,15 +18,14 @@ class BigBullet extends Bullet {
 		
 		_hitbox = new Rectangle(x - _clip.width / 2, y - _clip.height / 2, _clip.width, _clip.height);
 		
-		var xdest = PlayState.getInstance()._player.x;
-		Actuate.tween(this, 1.5, { x: xdest } ).ease(Quad.easeInOut).onComplete(destroy);
+		Actuate.tween(this, 1.5, { x: xdest, y: ydest } ).ease(Quad.easeInOut).onComplete(destroy);
 		
 		PlayState.getInstance()._sndbigbullet.play();
 	}
 	
 	public override function update(eTime:Int) : Void {
-		_clip.x = x;
-		_hitbox.x = x;
+		_clip.x = x; _clip.y = y;
+		_hitbox.x = x; _hitbox.y = y;
 	}
 	
 	public override function destroy():Void {

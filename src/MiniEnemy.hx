@@ -69,7 +69,7 @@ class MiniEnemy extends BasicEnemy {
 	}
 	
 	public function bigShoot(x:Float, y:Float) {
-		var bullet = new BigBullet(_layer, Std.int(x - 8), Std.int(y), PlayState.getInstance()._enemyBullets);
-		PlayState.getInstance()._enemyBullets.push(bullet);
+		var b = new BigBullet(_layer, Std.int(x - 8), Std.int(y), PlayState.getInstance()._enemyBullets, PlayState.getInstance()._player.x, y);
+		PlayState.getInstance()._enemyBullets.push(b);
 	}
 }

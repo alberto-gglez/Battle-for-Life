@@ -10,7 +10,7 @@ class Bullet extends Entity {
 	private var _bullets:Array<Bullet>;
 	private var _destroyed:Bool;
 	
-	public function new(tl:TileLayer, x:Int, y:Int, bullets:Array<Bullet>, hspeed:Float = 1, vspeed:Float = 0, speed:Float = 0.17) {
+	public function new(tl:TileLayer, x:Float, y:Float, bullets:Array<Bullet>, hspeed:Float = 1, vspeed:Float = 0, speed:Float = 0.17) {
 		super(tl);
 		
 		this.x = x; this.y = y;

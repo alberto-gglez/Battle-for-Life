@@ -48,10 +48,12 @@ class PlayState extends GameState {
 	private var _gameOverTxt:TextField;
 	
 	public var _sndshoot:Sound;
+	public var _sndshoot2:Sound;
 	public var _sndplayerhit:Sound;
 	public var _sndenemyhit:Sound;
 	public var _sndexplosion:Sound;
 	public var _sndbigbullet:Sound;
+	public var _sndEyeAwoken:Sound;
 	
 	private var _keysPressed:Map<Int, Bool>;
 	
@@ -68,10 +70,12 @@ class PlayState extends GameState {
 		_uilayer = new TileLayer(tilesheet);
 		
 		_sndshoot = Assets.getSound("snd/shoot.wav");
+		_sndshoot2 = Assets.getSound("snd/shoot_2.wav");
 		_sndplayerhit = Assets.getSound("snd/playerhit.wav");
 		_sndenemyhit = Assets.getSound("snd/enemyhit.wav");
 		_sndexplosion = Assets.getSound("snd/enemykilled.wav");
 		_sndbigbullet = Assets.getSound("snd/bigbullet.wav");
+		_sndEyeAwoken = Assets.getSound("snd/eyeawoken.wav");
 		
 		_rect = new Sprite();
 		_rect.graphics.beginFill(0x133C2E);
@@ -105,7 +109,7 @@ class PlayState extends GameState {
 		_gameOver = true;
 	}
 	
-	public function damagedEffect(e:Entity, p:Int, t:Float):Void {
+	public function damagedEffect(e:Dynamic, p:Int, t:Float):Void {
 		if (!_gameOver) {
 			if (p == 0) {
 				e.visible = true;
@@ -119,7 +123,7 @@ class PlayState extends GameState {
 				}
 			}
 		} else
-			e.visible = false;
+			e.visible = true;
 	}
 	
 	public static function getInstance():PlayState {

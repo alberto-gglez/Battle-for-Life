@@ -6,16 +6,27 @@ import aze.display.TileLayer;
 import aze.display.TileSprite;
 import openfl.geom.Rectangle;
 
+enum BossStages {
+	InitialStage;
+	EndStage;
+}
 
 class Emitter extends Enemy {
 	
 	public var _clip:TileClip;
 	private var _isSecond:Bool;
+	private var _father:FirstBoss;
+	private var _active:Bool;
 	
-	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int, second:Bool = false) {
+	private var _nAttacks:Int;
+	
+	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int, second:Bool, f:FirstBoss) {
 		super(tl, group, points, xp, yp);
 		
 		_isSecond = second;
+		_father = f;
+		
+		_active = false;
 		
 		_clip = new TileClip(_layer, "firstboss_emitter", 2);
 		_layer.addChild(_clip);
@@ -31,6 +42,82 @@ class Emitter extends Enemy {
 			_hitbox.y = y + 4;
 		else
 			_hitbox.y = y + 3;
+			
+		_health = 50;
+	}
+	
+	public function init():Void {
+		if (!_active) {
+			_active = true;
+			_nAttacks = 0;
+			
+			if (_isSecond)
+				Actuate.timer(4).onComplete(attack);
+			else 
+				Actuate.timer(2).onComplete(attack);
+		}
+	}
+	
+	public function attack():Void {
+		if (_active && !PlayState.getInstance()._gameOver) {
+			
+			var onlyOneLeft = false;
+			
+			if (_isSecond && _father._emitter1._active == false || !_isSecond && _father._emitter2._active == false)
+				onlyOneLeft = true;
+			
+			if (onlyOneLeft) {
+				var bullet = new BigBullet(_layer, x - 8, y + 12, PlayState.getInstance()._enemyBullets, PlayState.getInstance()._player.x, PlayState.getInstance()._player.y);
+				PlayState.getInstance()._enemyBullets.push(bullet);
+				
+				
+				Actuate.timer(2).onComplete(attack);
+			} else {
+				if (_nAttacks == 2) { // double attack
+					_nAttacks = 0;
+					
+					if (_isSecond)
+						secondAttack();
+					else
+						Actuate.timer(2).onComplete(secondAttack);
+						
+				} else {
+					_nAttacks++;
+					var bullet = new BigBullet(_layer, x - 8, y + 12, PlayState.getInstance()._enemyBullets, PlayState.getInstance()._player.x, y + 12);
+					PlayState.getInstance()._enemyBullets.push(bullet);
+					
+					
+					Actuate.timer(4).onComplete(attack);
+				}
+			}
+		}
+	}
+	
+	public function secondAttack():Void {
+		if (_active && !PlayState.getInstance()._gameOver) {
+			var bullet = new BigBullet(_layer, x - 8, y + 12, PlayState.getInstance()._enemyBullets, PlayState.getInstance()._player.x, y + 12);
+			PlayState.getInstance()._enemyBullets.push(bullet);
+			
+			if (_isSecond)
+				Actuate.timer(4).onComplete(attack);
+			else 
+				Actuate.timer(2).onComplete(attack);
+		}
+	}
+	
+	public function gotHit():Void {
+		if (_active) {
+			_health--;
+			
+			if (_health > 0) {
+				PlayState.getInstance().damagedEffect(this, 2, 0.1);
+				PlayState.getInstance()._sndenemyhit.play();
+			} else {
+				PlayState.getInstance()._sndexplosion.play();
+				_layer.removeChild(_clip);
+				_active = false;
+			}
+		}
 	}
 	
 	public override function update(eTime:Int, b:Array<Bullet>):Void {
@@ -43,8 +130,12 @@ class Emitter extends Enemy {
 			_hitbox.y = y + 3;
 		
 		for (bullet in b)
-			if (collision(bullet))
+			if (_active && collision(bullet)) {
+				gotHit();
 				bullet.destroy();
+			}
+			
+		_clip.visible = visible;
 	}
 	
 }
@@ -53,19 +144,31 @@ class Eye extends Enemy {
 	
 	public var _clip:TileClip;
 	public var _pupil:TileSprite;
+	public var _active:Bool;
 	
-	public function new(tl:TileLayer, group:EnemyGroup) {
+	private var _father:FirstBoss;
+	
+	public function new(tl:TileLayer, group:EnemyGroup, f:FirstBoss) {
 		super(tl, group, 0, 0, 0);
 		
 		x = 160; y = 43;
+		
+		_father = f;
+		
+		_active = false;
+		
+		_health = 100;
 		
 		_pupil = new TileSprite(_layer, "firstboss_pupil");
 		_layer.addChild(_pupil);
 		
 		_pupil.x = x + 2 + _pupil.width / 2; _pupil.y = y + 7 + _pupil.height / 2;
 
-		_clip = new TileClip(_layer, "firstboss_eye", 3);
+		_clip = new TileClip(_layer, "firstboss_eye", 1);
 		_layer.addChild(_clip);
+		
+		_clip.animated = false;
+		_clip.loop = false;
 
 		_clip.x = x + _clip.width / 2; _clip.y = y + _clip.height / 2;
 
@@ -74,6 +177,36 @@ class Eye extends Enemy {
 		
 	}
 	
+	public function active():Void {
+		if (!_active) {
+			_active = true;
+			Actuate.timer(2).onComplete(attack);
+		}
+	}
+	
+	public function attack():Void {
+		if (_active && !PlayState.getInstance()._gameOver) {
+			
+			for (i in 0...14) {
+				Actuate.timer(i * 0.06).onComplete(shoot);
+			}
+			
+			Actuate.timer(2).onComplete(attack);
+		}
+	}
+	
+	public function shoot():Void {
+		if (_active) {
+			PlayState.getInstance()._sndshoot2.play();
+			var player = PlayState.getInstance()._player;
+			var angulo = Math.atan2(player.y - _pupil.y, player.x + 10 - _pupil.x);
+			var hspeed = Math.cos(angulo);
+			var vspeed = Math.sin(angulo);
+			var b = new Bullet(_layer, _pupil.x - 5, _pupil.y, PlayState.getInstance()._enemyBullets, hspeed, vspeed);
+			PlayState.getInstance()._enemyBullets.push(b);
+		}
+	}
+	
 	public override function update(eTime:Int, b:Array<Bullet>):Void {
 		_clip.x = x + _clip.width / 2; _clip.y = y + _clip.height / 2;
 		_hitbox.x = x + 8; _hitbox.y = y + 4;
@@ -81,8 +214,37 @@ class Eye extends Enemy {
 		_pupil.x = x + 2 + _pupil.width / 2; _pupil.y = y + 7 + _pupil.height / 2;
 		
 		for (bullet in b)
-			if (collision(bullet))
+			if (collision(bullet)) {
 				bullet.destroy();
+				gotHit();
+			}
+		
+		if (_active) {
+			_pupil.y = y + _pupil.height / 2 + PlayState.getInstance()._player.y * 11 / 102;
+		}
+	}
+	
+	public function gotHit():Void {
+		if (_active) {
+			_health--;
+		
+			if (_health > 0) {
+				PlayState.getInstance()._sndenemyhit.play();
+				PlayState.getInstance().damagedEffect(_pupil, 2, 0.1);
+			} else {
+				_active = false;
+				PlayState.getInstance()._sndexplosion.play();
+				_layer.removeChild(_clip);
+				_layer.removeChild(_pupil);
+			}
+		}
+	}
+	
+	public function wakeUp():Void {
+		Actuate.timer(1).onComplete(PlayState.getInstance()._sndEyeAwoken.play);
+		_clip.animated = true;
+		Actuate.timer(4).onComplete(Actuate.apply, [_clip, { animated: false } ]);
+		Actuate.timer(4).onComplete(active);
 	}
 	
 }
@@ -91,15 +253,19 @@ class FirstBoss extends Enemy {
 	
 	private var _sprite:TileSprite;
 	
-	private var _emitter1:Emitter;
-	private var _emitter2:Emitter;
+	public var _emitter1:Emitter;
+	public var _emitter2:Emitter;
 	private var _eye:Eye;
+	
+	public var _stage:BossStages;
 	
 	public function new(tl:TileLayer, group:EnemyGroup) {
 		super(tl, group, 5000, 161, 0);
 		
 		_sprite = new TileSprite(_layer, "firstboss_base");
 		_layer.addChild(_sprite);
+		
+		_stage = InitialStage;
 		
 		x = 161; y = 0;
 		
@@ -108,26 +274,39 @@ class FirstBoss extends Enemy {
 		
 		_sprite.x = x + _sprite.width / 2; _sprite.y = y + _sprite.height / 2;
 		
-		_emitter1 = new Emitter(_layer, group, 0, Std.int(x + 1), Std.int(y + 11));
-		_emitter2 = new Emitter(_layer, group, 0, Std.int(x + 1), Std.int(y + 110), true);
-		_eye = new Eye(_layer, group);
+		_emitter1 = new Emitter(_layer, group, 0, Std.int(x + 1), Std.int(y + 11), false, this);
+		_emitter2 = new Emitter(_layer, group, 0, Std.int(x + 1), Std.int(y + 110), true, this);
+		_eye = new Eye(_layer, group, this);
 		
+		init();
+	}
+	
+	public function init():Void {
 		Actuate.timer(1.5).onComplete(Actuate.tween, [this, 1 /* 5 */, { x: 119 } ]);
+		Actuate.timer(2).onComplete(_emitter1.init);
+		Actuate.timer(2).onComplete(_emitter2.init);
 	}
 	
 	public override function update(eTime:Int, b:Array<Bullet>):Void {
 		_sprite.x = x + _sprite.width / 2; _sprite.y = y + _sprite.height / 2;
-		_hitbox.x = x + 16; _hitbox.y = 0;
+		_hitbox.x = x + 18; _hitbox.y = 0;
 		
 		for (bullet in b)
 			if (collision(bullet))
 				bullet.destroy();
-		
-		_emitter1.x = x + 1; _emitter1.y = y + 11;
-		_emitter1.update(eTime, b);
-		
-		_emitter2.x = x + 1; _emitter2.y = y + 114 - _emitter2._clip.height - 11;
-		_emitter2.update(eTime, b);
+				
+		if (_stage == InitialStage) {
+			_emitter1.x = x + 1; _emitter1.y = y + 8;
+			_emitter1.update(eTime, b);
+			
+			_emitter2.x = x + 1; _emitter2.y = y + 114 - _emitter2._clip.height - 8;
+			_emitter2.update(eTime, b);
+			
+			if (_emitter1._health <= 0 && _emitter2._health <= 0) {
+				_stage = EndStage;
+				Actuate.timer(1).onComplete(_eye.wakeUp);
+			}
+		}
 		
 		_eye.x = x + 7; _eye.y = 43;
 		_eye.update(eTime, b);
