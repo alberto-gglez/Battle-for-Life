@@ -10,25 +10,37 @@ import openfl.geom.Rectangle;
 class Emitter extends Enemy {
 	
 	public var _clip:TileClip;
+	private var _isSecond:Bool;
 	
 	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int, second:Bool = false) {
 		super(tl, group, points, xp, yp);
 		
+		_isSecond = second;
+		
 		_clip = new TileClip(_layer, "firstboss_emitter", 2);
 		_layer.addChild(_clip);
 
-		if (second)
+		if (_isSecond)
 			_clip.mirror = 2;
 		
 		x = xp; y = yp;
 		
-		_hitbox.x = x + _clip.width / 2; _hitbox.y = y + 4;
-		_hitbox.width = 12; _hitbox.height = 16;
+		_hitbox.width = 12; _hitbox.height = 20;
+		_hitbox.x = x + _clip.width / 2;
+		if (!_isSecond)
+			_hitbox.y = y + 4;
+		else
+			_hitbox.y = y + 3;
 	}
 	
 	public override function update(eTime:Int, b:Array<Bullet>):Void {
 		_clip.x = x + _clip.width / 2; _clip.y = y + _clip.height / 2;
-		_hitbox.x = _clip.x; _hitbox.y = y + 4;
+		
+		_hitbox.x = x + _clip.width / 2;
+		if (!_isSecond)
+			_hitbox.y = y + 4;
+		else
+			_hitbox.y = y + 3;
 		
 		for (bullet in b)
 			if (collision(bullet))
@@ -40,25 +52,33 @@ class Emitter extends Enemy {
 class Eye extends Enemy {
 	
 	public var _clip:TileClip;
+	public var _pupil:TileSprite;
 	
 	public function new(tl:TileLayer, group:EnemyGroup) {
 		super(tl, group, 0, 0, 0);
 		
-		_points = 0;
-		x = 160; y = 40;
+		x = 160; y = 43;
+		
+		_pupil = new TileSprite(_layer, "firstboss_pupil");
+		_layer.addChild(_pupil);
+		
+		_pupil.x = x + 2 + _pupil.width / 2; _pupil.y = y + 7 + _pupil.height / 2;
 
-		_clip = new TileClip(_layer, "firstboss_eye", 4);
+		_clip = new TileClip(_layer, "firstboss_eye", 3);
 		_layer.addChild(_clip);
 
 		_clip.x = x + _clip.width / 2; _clip.y = y + _clip.height / 2;
 
-		_hitbox.x = x; _hitbox.y = y;
-		_hitbox.width = _clip.width; _hitbox.height = _clip.height;
+		_hitbox.x = x + 8; _hitbox.y = y + 4;
+		_hitbox.width = _clip.width; _hitbox.height = _clip.height - 4;
+		
 	}
 	
 	public override function update(eTime:Int, b:Array<Bullet>):Void {
 		_clip.x = x + _clip.width / 2; _clip.y = y + _clip.height / 2;
-		_hitbox.x = x; _hitbox.y = y;
+		_hitbox.x = x + 8; _hitbox.y = y + 4;
+		
+		_pupil.x = x + 2 + _pupil.width / 2; _pupil.y = y + 7 + _pupil.height / 2;
 		
 		for (bullet in b)
 			if (collision(bullet))
@@ -109,7 +129,7 @@ class FirstBoss extends Enemy {
 		_emitter2.x = x + 1; _emitter2.y = y + 114 - _emitter2._clip.height - 11;
 		_emitter2.update(eTime, b);
 		
-		_eye.x = x + 7; _eye.y = y + 42;
+		_eye.x = x + 7; _eye.y = 43;
 		_eye.update(eTime, b);
 	}
 	
