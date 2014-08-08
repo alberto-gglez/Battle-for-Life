@@ -126,7 +126,7 @@ class Player extends Entity {
 		}
 	}
 	
-	public function update(eTime:Int, eb:Array<Bullet>):Void {
+	public function update(eTime:Int, eb:Array<Bullet>, hs:Array<Heart>):Void {
 		
 		// collisions with enemy bullets
 		for (bullet in eb)
@@ -135,6 +135,18 @@ class Player extends Entity {
 					gotHit();
 				
 				bullet.destroy();
+			}
+		
+		for (heart in hs)
+			if (collision(heart) && !PlayState.getInstance()._gameOver) {
+				if (PlayState.getInstance()._lifes < 3) {
+					PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "fullheart";
+					PlayState.getInstance()._lifes++;
+				} else {
+					PlayState.getInstance()._score += 500 * PlayState.getInstance()._gameMode;
+				}
+				PlayState.getInstance()._sndLifeUp.play();
+				heart.destroy();
 			}
 		
 		_hspeed = _pright - _pleft;

@@ -59,6 +59,6 @@ class Main extends Sprite {
 		Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = openfl.display.StageScaleMode.EXACT_FIT;
 		Lib.current.addChild(new Main());
-		//Lib.current.addChild(new FPS());
+		//Lib.current.addChild(new FPS(10,130,0xFFFFFF));
 	}
 }

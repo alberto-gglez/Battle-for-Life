@@ -26,6 +26,8 @@ class PlayState extends GameState {
 	private var _gamelayer:TileLayer;
 	private var _uilayer:TileLayer;
 	
+	private var _hearts:Array<Heart>;
+	
 	public var _player:Player;
 	public var _bullets:Array<Bullet>;
 	public var _maxBullets:Int;
@@ -54,6 +56,7 @@ class PlayState extends GameState {
 	public var _sndexplosion:Sound;
 	public var _sndbigbullet:Sound;
 	public var _sndEyeAwoken:Sound;
+	public var _sndLifeUp:Sound;
 	
 	private var _keysPressed:Map<Int, Bool>;
 	
@@ -76,6 +79,9 @@ class PlayState extends GameState {
 		_sndexplosion = Assets.getSound("snd/enemykilled.wav");
 		_sndbigbullet = Assets.getSound("snd/bigbullet.wav");
 		_sndEyeAwoken = Assets.getSound("snd/eyeawoken.wav");
+		_sndLifeUp = Assets.getSound("snd/lifeup.wav");
+		
+		_hearts = new Array<Heart>();
 		
 		_rect = new Sprite();
 		_rect.graphics.beginFill(0x133C2E);
@@ -109,6 +115,11 @@ class PlayState extends GameState {
 		_gameOver = true;
 	}
 	
+	public function createHeart(xp:Float, yp:Float):Void {
+		var h = new Heart(_gamelayer, _hearts, xp, yp);
+		_hearts.push(h);
+	}
+	
 	public function damagedEffect(e:Dynamic, p:Int, t:Float):Void {
 		if (!_gameOver) {
 			if (p == 0) {
@@ -122,8 +133,12 @@ class PlayState extends GameState {
 					Actuate.timer(t).onComplete(damagedEffect, [e, p - 1, t]);
 				}
 			}
-		} else
-			e.visible = true;
+		} else {
+			if (e == _player)
+				e.visible = false;
+			else
+				e.visible = true;
+		}
 	}
 	
 	public static function getInstance():PlayState {
@@ -154,11 +169,13 @@ class PlayState extends GameState {
 			_uilayer.addChild(llife);
 		}
 		
+		/*
 		for (i in 0..._special) {
 			var lspecial = new TileClip(_uilayer, "special", 3);
 			lspecial.x = 15 + i * 15; lspecial.y = 136;
 			_uilayer.addChild(lspecial);
 		}
+		*/
 		
 		_keysPressed = new Map<Int, Bool>();
 		
@@ -203,13 +220,16 @@ class PlayState extends GameState {
 		for (ebullet in _enemyBullets)
 			ebullet.update(eTime);
 		
-		_player.update(eTime, _enemyBullets);
+		_player.update(eTime, _enemyBullets, _hearts);
 			
 		EnemyManager.getInstance().update(eTime, _bullets);
 			
 		for (explosion in _bodyexplosions)
 			explosion.update(eTime, _bodyexplosions);
 		
+		for (h in _hearts)
+			h.update(eTime);
+			
 		_gamelayer.render();
 		_uilayer.render();
 		
@@ -217,7 +237,6 @@ class PlayState extends GameState {
 		for (i in 0...(8 - _scoretxt.text.length))
 			_scoretxt.text = "0" + _scoretxt.text;
 		
-		//trace("b:" + _bullets.length + " eb:" + _enemyBullets.length + " e:" + _enemies.length);
 	}
 	
 	public override function keyPressed(event:KeyboardEvent):Void {

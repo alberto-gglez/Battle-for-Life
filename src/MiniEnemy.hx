@@ -72,4 +72,10 @@ class MiniEnemy extends BasicEnemy {
 		var b = new BigBullet(_layer, Std.int(x - 8), Std.int(y), PlayState.getInstance()._enemyBullets, PlayState.getInstance()._player.x, y);
 		PlayState.getInstance()._enemyBullets.push(b);
 	}
+	
+	public override function kill():Void {
+		super.kill();
+		
+		PlayState.getInstance().createHeart(x, y);
+	}
 }

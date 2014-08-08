@@ -52,9 +52,9 @@ class Emitter extends Enemy {
 			_nAttacks = 0;
 			
 			if (_isSecond)
-				Actuate.timer(4).onComplete(attack);
+				Actuate.timer(2.5).onComplete(attack);
 			else 
-				Actuate.timer(2).onComplete(attack);
+				Actuate.timer(0.5).onComplete(attack);
 		}
 	}
 	
@@ -110,12 +110,12 @@ class Emitter extends Enemy {
 			_health--;
 			
 			if (_health > 0) {
-				PlayState.getInstance().damagedEffect(this, 2, 0.1);
+				PlayState.getInstance().damagedEffect(_clip, 2, 0.1);
 				PlayState.getInstance()._sndenemyhit.play();
 			} else {
-				PlayState.getInstance()._sndexplosion.play();
 				_layer.removeChild(_clip);
 				_active = false;
+				PlayState.getInstance()._sndexplosion.play();
 			}
 		}
 	}
@@ -134,8 +134,6 @@ class Emitter extends Enemy {
 				gotHit();
 				bullet.destroy();
 			}
-			
-		_clip.visible = visible;
 	}
 	
 }
@@ -187,22 +185,32 @@ class Eye extends Enemy {
 	public function attack():Void {
 		if (_active && !PlayState.getInstance()._gameOver) {
 			
-			for (i in 0...14) {
-				Actuate.timer(i * 0.06).onComplete(shoot);
-			}
-			
-			Actuate.timer(2).onComplete(attack);
-		}
-	}
-	
-	public function shoot():Void {
-		if (_active) {
-			PlayState.getInstance()._sndshoot2.play();
 			var player = PlayState.getInstance()._player;
 			var angulo = Math.atan2(player.y - _pupil.y, player.x + 10 - _pupil.x);
 			var hspeed = Math.cos(angulo);
 			var vspeed = Math.sin(angulo);
-			var b = new Bullet(_layer, _pupil.x - 5, _pupil.y, PlayState.getInstance()._enemyBullets, hspeed, vspeed);
+			
+			for (i in 0...10) {
+				Actuate.timer(i * 0.1).onComplete(shoot, [hspeed, vspeed]);
+			}
+			
+			Actuate.timer(1.5).onComplete(secondShoot);
+			
+			Actuate.timer(2.5).onComplete(attack);
+		}
+	}
+	
+	public function shoot(hspeed:Float, vspeed:Float):Void {
+		if (_active) {
+			PlayState.getInstance()._sndshoot2.play();
+			var b = new Bullet(_layer, _pupil.x - 5, _pupil.y, PlayState.getInstance()._enemyBullets, hspeed, vspeed, 0.2);
+			PlayState.getInstance()._enemyBullets.push(b);
+		}
+	}
+	
+	public function secondShoot():Void {
+		if (_active && !PlayState.getInstance()._gameOver) {
+			var b = new BigBullet(_layer, _pupil.x - 5, _pupil.y, PlayState.getInstance()._enemyBullets, PlayState.getInstance()._player.x, PlayState.getInstance()._player.y);
 			PlayState.getInstance()._enemyBullets.push(b);
 		}
 	}
@@ -256,6 +264,7 @@ class FirstBoss extends Enemy {
 	public var _emitter1:Emitter;
 	public var _emitter2:Emitter;
 	private var _eye:Eye;
+	private var _isDead:Bool;
 	
 	public var _stage:BossStages;
 	
@@ -266,6 +275,7 @@ class FirstBoss extends Enemy {
 		_layer.addChild(_sprite);
 		
 		_stage = InitialStage;
+		_isDead = false;
 		
 		x = 161; y = 0;
 		
@@ -282,9 +292,9 @@ class FirstBoss extends Enemy {
 	}
 	
 	public function init():Void {
-		Actuate.timer(1.5).onComplete(Actuate.tween, [this, 1 /* 5 */, { x: 119 } ]);
-		Actuate.timer(2).onComplete(_emitter1.init);
-		Actuate.timer(2).onComplete(_emitter2.init);
+		Actuate.timer(1.5).onComplete(Actuate.tween, [this, 2, { x: 119 } ]);
+		Actuate.timer(3.5).onComplete(_emitter1.init);
+		Actuate.timer(3.5).onComplete(_emitter2.init);
 	}
 	
 	public override function update(eTime:Int, b:Array<Bullet>):Void {
@@ -310,6 +320,41 @@ class FirstBoss extends Enemy {
 		
 		_eye.x = x + 7; _eye.y = 43;
 		_eye.update(eTime, b);
+		
+		if (!_isDead && _eye._health == 0) {
+			_isDead = true;
+			kill();
+		}
+	}
+	
+	public override function removeClips():Void {
+		_layer.removeChild(_sprite);
+		_layer.removeChild(_emitter1._clip);
+		_layer.removeChild(_emitter2._clip);
+		_layer.removeChild(_eye._clip);
+		_layer.removeChild(_eye._pupil);
+	}
+	
+	public function kill():Void {
+		PlayState.getInstance()._enemiesKilled++;
+		PlayState.getInstance()._score += _points * PlayState.getInstance()._gameMode;
+		PlayState.getInstance().damagedEffect(_sprite, 20, 0.1);
+		
+		Actuate.timer(0.3).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(1).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(1.2).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(1.3).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(1.4).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(1.5).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(1.6).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(2).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(2.05).onComplete(PlayState.getInstance()._sndexplosion.play);
+		Actuate.timer(2.1).onComplete(PlayState.getInstance()._sndexplosion.play);
+		
+		Actuate.timer(2.15).onComplete(removeClips);
+		Actuate.timer(2.15).onComplete(_group.remove, [this]);
+		Actuate.timer(2.15).onComplete(PlayState.getInstance().createHeart, [x, 40]);
+		Actuate.timer(2.15).onComplete(PlayState.getInstance().createHeart, [x, 60]);
 	}
 	
 }
