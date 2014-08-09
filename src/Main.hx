@@ -1,5 +1,6 @@
 package ;
 
+import openfl.display.StageQuality;
 import openfl.display.Bitmap;
 import openfl.display.FPS;
 import openfl.display.Sprite;
@@ -58,6 +59,7 @@ class Main extends Sprite {
 		// static entry point
 		Lib.current.stage.align = openfl.display.StageAlign.TOP_LEFT;
 		Lib.current.stage.scaleMode = openfl.display.StageScaleMode.EXACT_FIT;
+		Lib.current.stage.quality = StageQuality.LOW;
 		Lib.current.addChild(new Main());
 		//Lib.current.addChild(new FPS(10,130,0xFFFFFF));
 	}

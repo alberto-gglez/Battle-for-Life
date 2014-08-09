@@ -74,7 +74,6 @@ class EnemyGroup extends Sprite {
 			}
 			case 5: {
 				var e = new FirstBoss(_layer, this);
-				//e.init();
 				_enemies.push(e);
 			}
 		}

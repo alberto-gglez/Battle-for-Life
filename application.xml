@@ -9,9 +9,9 @@
 	<app main="Main" file="GBJamShooter" path="bin" />
 	
 	<window background="#D6E894" fps="60" />
-	<window width="160" height="144" unless="mobile" />
+	<window width="160" height="144" />
 	<window resizable="true" fullscreen="false" />
-	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" />
+	<window orientation="landscape" vsync="false" antialiasing="0" />
 	
 	<!-- classpath, haxe libs -->
 	<source path="src" />

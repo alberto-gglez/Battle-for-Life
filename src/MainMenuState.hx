@@ -145,20 +145,28 @@ class MainMenuState extends GameState {
 		_layer.render();
 	}
 	
+	public function initMenu():Void {
+		removeChild(_pressStartTxt);
+		removeChild(_layer.view);
+		
+		addChild(_normalTxt);
+		addChild(_hardTxt);
+		addChild(_insaneTxt);
+		addChild(_descriptionTxt);
+		
+		_alreadyPressed = false;
+	}
+	
 	public override function keyPressed(event:KeyboardEvent):Void {
 		if (!_menuShown) {
 			if (event.keyCode == Keyboard.ENTER) {
 				_menuShown = true;
-				//_startSnd.play();
-				_selectSnd.play();
+				_startSnd.play();
 				
-				removeChild(_pressStartTxt);
-				removeChild(_layer.view);
+				// to prevent key pressing during the timeout
+				_alreadyPressed = true;
 				
-				addChild(_normalTxt);
-				addChild(_hardTxt);
-				addChild(_insaneTxt);
-				addChild(_descriptionTxt);
+				Actuate.timer(1).onComplete(initMenu);
 			}
 		} else if (!_alreadyPressed) {
 			
