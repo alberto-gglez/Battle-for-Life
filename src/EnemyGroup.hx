@@ -35,15 +35,29 @@ class EnemyGroup extends Sprite {
 		return 10 + Std.random(90);
 	}
 	
-	private function addBasicEnemy(ypos:Int):Void {
+	private function addBasicEnemy(ypos:Float):Void {
 		var e = new BasicEnemy(_layer, this, 100, 180, ypos);
 		e.init();
 		_enemies.push(e);
 	}
 	
-	private function addMiniEnemy(ypos:Int):Void {
+	private function addMiniEnemy(ypos:Float):Void {
 		var e = new MiniEnemy(_layer, this, 200, 180, ypos);
 		e.init();
+		_enemies.push(e);
+	}
+	
+	private function addHorde(ypos:Float):Void {
+		var e = new HordeEnemy(_layer, this, 25, 180, ypos);
+		_enemies.push(e);
+		
+		Actuate.timer(0.15).onComplete(extraHorde, [ypos]);
+		Actuate.timer(0.3).onComplete(extraHorde, [ypos]);
+		Actuate.timer(0.45).onComplete(extraHorde, [ypos]);
+	}
+	
+	private function extraHorde(ypos:Float):Void {
+		var e = new HordeEnemy(_layer, this, 25, 180, ypos);
 		_enemies.push(e);
 	}
 	
@@ -73,8 +87,30 @@ class EnemyGroup extends Sprite {
 				Actuate.timer(3.5).onComplete(create, [2]);
 			}
 			case 5: {
+				// first boss
 				var e = new FirstBoss(_layer, this);
 				_enemies.push(e);
+			}
+			case 6: {
+				// horde
+				addHorde(wholeScreen());
+			}
+			case 7: {
+				// 2 hordes
+				addHorde(halfTop());
+				Actuate.timer(1).onComplete(addHorde, [halfBottom()]);
+			}
+			case 8: {
+				// 4 hordes
+				addHorde(halfTop());
+				Actuate.timer(1).onComplete(addHorde, [halfBottom()]);
+				Actuate.timer(2).onComplete(addHorde, [halfTop()]);
+				Actuate.timer(3).onComplete(addHorde, [halfBottom()]);
+			}
+			case 9: {
+				// 2 hordes and a laser
+				create(7);
+				PlayState.getInstance()._laser = new Laser(_layer, wholeScreen());
 			}
 		}
 	}
@@ -82,7 +118,7 @@ class EnemyGroup extends Sprite {
 	public function remove(e:Enemy):Void {
 		_enemies.remove(e);
 		
-		if (_enemies.length == 0)
+		if (_enemies.length == 0 && !PlayState.getInstance()._gameOver)
 			EnemyManager.getInstance().groupDeleted(this);
 	}
 	

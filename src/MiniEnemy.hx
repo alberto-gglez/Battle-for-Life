@@ -7,7 +7,7 @@ import motion.easing.Cubic;
 
 class MiniEnemy extends BasicEnemy {
 	
-	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int) {
+	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Float, yp:Float) {
 		super(tl, group, points, xp, yp);
 		
 		for (clip in _vclips)

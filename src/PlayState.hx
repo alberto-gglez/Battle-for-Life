@@ -48,6 +48,7 @@ class PlayState extends GameState {
 	public var _score:Int;
 	private var _scoretxt:TextField;
 	private var _gameOverTxt:TextField;
+	private var _gameCompletedTxt:TextField;
 	
 	public var _sndshoot:Sound;
 	public var _sndshoot2:Sound;
@@ -57,12 +58,20 @@ class PlayState extends GameState {
 	public var _sndbigbullet:Sound;
 	public var _sndEyeAwoken:Sound;
 	public var _sndLifeUp:Sound;
+	public var _sndHordeKilled:Sound;
+	public var _sndLaser:Sound;
 	
 	private var _keysPressed:Map<Int, Bool>;
 	
 	public var _gameOver:Bool;
 	public var _canReset:Bool;
 	public var _gameMode:Int;
+	
+	private var _bg:Background;
+	
+	public var _hordeEnemiesKilled:Int;
+	
+	public var _laser:Laser;
 	
 	private function new() {
 		super();
@@ -80,6 +89,8 @@ class PlayState extends GameState {
 		_sndbigbullet = Assets.getSound("snd/bigbullet.wav");
 		_sndEyeAwoken = Assets.getSound("snd/eyeawoken.wav");
 		_sndLifeUp = Assets.getSound("snd/lifeup.wav");
+		_sndHordeKilled = Assets.getSound("snd/hordekilled.wav");
+		_sndLaser = Assets.getSound("snd/laser.wav");
 		
 		_hearts = new Array<Heart>();
 		
@@ -107,9 +118,32 @@ class PlayState extends GameState {
 		_gameOverTxt.x = 39; _gameOverTxt.y = 40;
 		_gameOverTxt.autoSize = TextFieldAutoSize.NONE;
 		_gameOverTxt.text = "GAME OVER";
+		
+		_gameCompletedTxt = new TextField();
+		_gameCompletedTxt.visible = false;
+		_gameCompletedTxt.selectable = false; _gameCompletedTxt.embedFonts = true;
+		_gameCompletedTxt.defaultTextFormat = new TextFormat(font, 16, 0x133C2E);
+		_gameCompletedTxt.x = 0; _gameCompletedTxt.y = 4;
+		_gameCompletedTxt.autoSize = TextFieldAutoSize.NONE;
+		_gameCompletedTxt.width = 160;
+		_gameCompletedTxt.text = "     You have completed\n             the first level!\n        Stay alert for the\n            final version ;)\n\n      Thanks for playing!";
+		
+	}
+	
+	public function gameCompleted():Void {
+		for (h in _hearts)
+			Actuate.timer(2).onComplete(h.destroy);
+		
+		Actuate.timer(2).onComplete(Actuate.apply, [_player, { visible: false}]);
+		Actuate.timer(2).onComplete(Actuate.apply, [_gameCompletedTxt, { visible: true }]);
+		Actuate.timer(3).onComplete(Actuate.apply, [ this, { _canReset: true } ]);
+		_gameOver = true;
 	}
 	
 	public function gameOver():Void {
+		for (h in _hearts)
+			Actuate.timer(2).onComplete(h.destroy);
+		
 		Actuate.timer(2).onComplete(Actuate.apply, [_gameOverTxt, { visible: true }]);
 		Actuate.timer(2).onComplete(Actuate.apply, [ this, { _canReset: true } ]);
 		_gameOver = true;
@@ -150,11 +184,15 @@ class PlayState extends GameState {
 	
 	// Event management
 	public override function enter():Void {
+		_bg = new Background(_gamelayer);
+		
 		_player = new Player(_gamelayer, 15, 50);
 		_bullets = new Array<Bullet>();
 		
+		_laser = null;
 		_score = 0;
 		_special = 3;
+		_hordeEnemiesKilled = 0;
 		
 		if (_gameMode == 3)
 			_lifes = 1;
@@ -184,6 +222,7 @@ class PlayState extends GameState {
 		_enemiesKilled = 0;
 		
 		_gameOverTxt.visible = false;
+		_gameCompletedTxt.visible = false;
 		
 		_canReset = false;
 		_gameOver = false;
@@ -192,11 +231,13 @@ class PlayState extends GameState {
 		Actuate.timer(0.2).onComplete(addChild, [_rect]);
 		Actuate.timer(0.2).onComplete(addChild, [_uilayer.view]);
 		Actuate.timer(0.2).onComplete(addChild, [_scoretxt]);
+		
 		addChild(_gameOverTxt);
+		Actuate.timer(0.3).onComplete(addChild, [_gameCompletedTxt]);
 		
 		EnemyManager.getInstance().init(_gamelayer, 1);
-		LevelManager.getInstance().init(_gamelayer, ["level"]);
-		LevelManager.getInstance().startLevel(0);
+		LevelManager.getInstance().init(_gamelayer, ["level1", "level2"]);
+		LevelManager.getInstance().startLevel(1);
 		
 		_prevTime = Lib.getTimer();
 	}
@@ -220,7 +261,7 @@ class PlayState extends GameState {
 		for (ebullet in _enemyBullets)
 			ebullet.update(eTime);
 		
-		_player.update(eTime, _enemyBullets, _hearts);
+		_player.update(eTime, _enemyBullets, _hearts, _laser);
 			
 		EnemyManager.getInstance().update(eTime, _bullets);
 			
@@ -229,6 +270,8 @@ class PlayState extends GameState {
 		
 		for (h in _hearts)
 			h.update(eTime);
+		
+		_bg.update(eTime);
 			
 		_gamelayer.render();
 		_uilayer.render();

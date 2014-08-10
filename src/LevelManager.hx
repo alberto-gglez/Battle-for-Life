@@ -1,5 +1,6 @@
 package ;
 
+import motion.Actuate;
 import openfl.Assets;
 import aze.display.TileLayer;
 import openfl.display.Sprite;
@@ -75,7 +76,7 @@ class LevelManager extends Sprite {
 					startLevel(_currentLevel);
 				} else {
 					// game end
-					//trace("game completed");
+					Actuate.timer(2).onComplete(PlayState.getInstance().gameCompleted);
 				}
 			}
 		}

@@ -21,7 +21,7 @@ class BasicEnemy extends Enemy {
 	private var _movingUp:Bool;
 	private var _movingDown:Bool;
 	
-	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int) {
+	public function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Float, yp:Float) {
 		super(tl, group, points, xp, yp);
 		
 		_health = 12;

@@ -8,7 +8,7 @@ class Enemy extends Entity {
 	private var _health:Int;
 	private var _group:EnemyGroup;
 	
-	private function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Int, yp:Int) {
+	private function new(tl:TileLayer, group:EnemyGroup, points:Int, xp:Float, yp:Float) {
 		super(tl);
 
 		_group = group;

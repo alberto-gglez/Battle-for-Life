@@ -22,7 +22,7 @@ class Player extends Entity {
 	private var _mapstate:Map<String, Int>;
 	private var _curClip:TileClip;
 	private var _movingDown:Bool;
-	private var _invul:Bool;
+	public var _invul:Bool;
 	
 	private var _pright:Int;
 	private var _pleft:Int;
@@ -126,7 +126,11 @@ class Player extends Entity {
 		}
 	}
 	
-	public function update(eTime:Int, eb:Array<Bullet>, hs:Array<Heart>):Void {
+	public function update(eTime:Int, eb:Array<Bullet>, hs:Array<Heart>, l:Laser):Void {
+		
+		if (l != null)
+			if (l._active && !_invul && PlayState.getInstance()._lifes > 0 && collision(l))
+				gotHit();
 		
 		// collisions with enemy bullets
 		for (bullet in eb)
@@ -139,7 +143,7 @@ class Player extends Entity {
 		
 		for (heart in hs)
 			if (collision(heart) && !PlayState.getInstance()._gameOver) {
-				if (PlayState.getInstance()._lifes < 3) {
+				if (PlayState.getInstance()._lifes < 3 && PlayState.getInstance()._gameMode != 3) {
 					PlayState.getInstance()._vlifes[PlayState.getInstance()._lifes].tile = "fullheart";
 					PlayState.getInstance()._lifes++;
 				} else {
