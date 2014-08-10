@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with TexturePacker http://www.codeandweb.com/texturepacker-->
-<!-- $TexturePacker:SmartUpdate:04492a9e51baec85c222ef7886c52a78:e37c636a61fe7cd06a1aa545280cc27b:cde709370900f12288f3449eded86f07$ -->
+<!-- $TexturePacker:SmartUpdate:e9c92cc78be810837d9e2e4be35c82f7:a946163af1f5813d71fcd4d39298a6b5:cde709370900f12288f3449eded86f07$ -->
 <TextureAtlas imagePath="atlas.png">
     <SubTexture name="bg" x="2" y="2" width="22" height="114"/>
     <SubTexture name="bigbullet_0" x="26" y="2" width="11" height="11"/>
@@ -33,22 +33,30 @@
     <SubTexture name="piece6" x="2" y="149" width="3" height="3"/>
     <SubTexture name="playerdown_0" x="7" y="149" width="31" height="19"/>
     <SubTexture name="playerdown_1" x="40" y="149" width="31" height="19"/>
-    <SubTexture name="playerleft_0" x="73" y="149" width="31" height="19"/>
-    <SubTexture name="playerleft_1" x="106" y="149" width="31" height="19"/>
-    <SubTexture name="playerstand_0" x="139" y="149" width="31" height="19"/>
-    <SubTexture name="playerstand_1" x="172" y="149" width="31" height="19"/>
-    <SubTexture name="playerstand_2" x="205" y="149" width="31" height="19"/>
-    <SubTexture name="playerstand_3" x="172" y="149" width="31" height="19"/>
-    <SubTexture name="playerup_0" x="2" y="170" width="31" height="19"/>
-    <SubTexture name="playerup_1" x="35" y="170" width="31" height="19"/>
-    <SubTexture name="shoot_0" x="68" y="170" width="6" height="6"/>
-    <SubTexture name="shoot_1" x="76" y="170" width="6" height="6"/>
-    <SubTexture name="shoot_2" x="84" y="170" width="6" height="6"/>
-    <SubTexture name="shoot_3" x="92" y="170" width="6" height="6"/>
-    <SubTexture name="special_0" x="100" y="170" width="11" height="11"/>
-    <SubTexture name="special_1" x="113" y="170" width="11" height="11"/>
-    <SubTexture name="special_2" x="126" y="170" width="11" height="11"/>
-    <SubTexture name="special_3" x="139" y="170" width="11" height="11"/>
-    <SubTexture name="title" x="152" y="170" width="92" height="65"/>
-    <SubTexture name="warning" x="2" y="237" width="15" height="16"/>
+    <SubTexture name="playerfinal_0" x="73" y="149" width="31" height="19"/>
+    <SubTexture name="playerfinal_1" x="106" y="149" width="31" height="19"/>
+    <SubTexture name="playerleft_0" x="139" y="149" width="31" height="19"/>
+    <SubTexture name="playerleft_1" x="172" y="149" width="31" height="19"/>
+    <SubTexture name="playerstand_0" x="205" y="149" width="31" height="19"/>
+    <SubTexture name="playerstand_1" x="2" y="170" width="31" height="19"/>
+    <SubTexture name="playerstand_2" x="35" y="170" width="31" height="19"/>
+    <SubTexture name="playerstand_3" x="2" y="170" width="31" height="19"/>
+    <SubTexture name="playerstand_f_0" x="68" y="170" width="31" height="19"/>
+    <SubTexture name="playerstand_f_1" x="101" y="170" width="31" height="19"/>
+    <SubTexture name="playerstand_f_2" x="134" y="170" width="31" height="19"/>
+    <SubTexture name="playerstand_f_3" x="101" y="170" width="31" height="19"/>
+    <SubTexture name="playerup_0" x="167" y="170" width="31" height="19"/>
+    <SubTexture name="playerup_1" x="200" y="170" width="31" height="19"/>
+    <SubTexture name="secondboss_base" x="2" y="191" width="82" height="82"/>
+    <SubTexture name="secondboss_core" x="86" y="191" width="57" height="57"/>
+    <SubTexture name="shoot_0" x="145" y="191" width="6" height="6"/>
+    <SubTexture name="shoot_1" x="153" y="191" width="6" height="6"/>
+    <SubTexture name="shoot_2" x="161" y="191" width="6" height="6"/>
+    <SubTexture name="shoot_3" x="169" y="191" width="6" height="6"/>
+    <SubTexture name="special_0" x="177" y="191" width="11" height="11"/>
+    <SubTexture name="special_1" x="190" y="191" width="11" height="11"/>
+    <SubTexture name="special_2" x="203" y="191" width="11" height="11"/>
+    <SubTexture name="special_3" x="216" y="191" width="11" height="11"/>
+    <SubTexture name="title" x="2" y="275" width="92" height="65"/>
+    <SubTexture name="warning" x="96" y="275" width="15" height="16"/>
 </TextureAtlas>

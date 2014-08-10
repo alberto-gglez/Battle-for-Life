@@ -4,7 +4,7 @@
         <key>fileFormatVersion</key>
         <int>3</int>
         <key>texturePackerVersion</key>
-        <string>3.3.4</string>
+        <string>3.4.0</string>
         <key>fileName</key>
         <string>C:/Users/alber_000/Programación/Haxe/GBJam-Shooter/texturepacker.tps</string>
         <key>autoSDSettings</key>
@@ -149,6 +149,8 @@
         <true/>
         <key>trimSpriteNames</key>
         <false/>
+        <key>prependSmartFolderName</key>
+        <false/>
         <key>cleanTransparentPixels</key>
         <true/>
         <key>globalSpriteSettings</key>
@@ -214,6 +216,21 @@
             <filename>assets/img/inacabado/shoot_2.png</filename>
             <filename>assets/img/inacabado/shoot_3.png</filename>
             <filename>assets/img/inacabado/special_0.png</filename>
+            <filename>assets/img/inacabado/bg.png</filename>
+            <filename>assets/img/inacabado/horde.png</filename>
+            <filename>assets/img/inacabado/laser_0.png</filename>
+            <filename>assets/img/inacabado/laser_1.png</filename>
+            <filename>assets/img/inacabado/laser_2.png</filename>
+            <filename>assets/img/inacabado/laser_3.png</filename>
+            <filename>assets/img/inacabado/warning.png</filename>
+            <filename>assets/img/inacabado/secondboss_core.png</filename>
+            <filename>assets/img/inacabado/secondboss_base.png</filename>
+            <filename>assets/img/inacabado/playerstand_f_3.png</filename>
+            <filename>assets/img/inacabado/playerfinal_0.png</filename>
+            <filename>assets/img/inacabado/playerfinal_1.png</filename>
+            <filename>assets/img/inacabado/playerstand_f_0.png</filename>
+            <filename>assets/img/inacabado/playerstand_f_1.png</filename>
+            <filename>assets/img/inacabado/playerstand_f_2.png</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
