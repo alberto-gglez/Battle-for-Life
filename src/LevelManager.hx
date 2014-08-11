@@ -62,7 +62,11 @@ class LevelManager extends Sprite {
 		if (_active) {
 			if (_currentEG < _levels[_currentLevel].length) {
 				//trace("new enemy group [id:" + Std.parseInt(_levels[_currentLevel].charAt(_currentEG)) + "]");
-				EnemyManager.getInstance().getGroup().create(Std.parseInt(_levels[_currentLevel].charAt(_currentEG)));
+				// apaño para el segundo jefe
+				if (_levels[_currentLevel].charAt(_currentEG) == 'b')
+					EnemyManager.getInstance().getGroup().create(10);
+				else
+					EnemyManager.getInstance().getGroup().create(Std.parseInt(_levels[_currentLevel].charAt(_currentEG)));
 				_currentEG++;
 			} else {
 				// level end
@@ -76,7 +80,7 @@ class LevelManager extends Sprite {
 					startLevel(_currentLevel);
 				} else {
 					// game end
-					Actuate.timer(2).onComplete(PlayState.getInstance().gameCompleted);
+					//Actuate.timer(2).onComplete(PlayState.getInstance().gameCompleted);
 				}
 			}
 		}

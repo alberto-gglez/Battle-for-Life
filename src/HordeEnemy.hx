@@ -16,7 +16,7 @@ class HordeEnemy extends Enemy {
 		_sprite.x = x + _sprite.width / 2; _sprite.y = y + _sprite.height / 2;
 		_layer.addChild(_sprite);
 		
-		_health = 3;
+		_health = 2;
 		_speed = 0.15;
 		_hspeed = -0.5;
 		_vspeed = 0;// -1;
@@ -40,7 +40,7 @@ class HordeEnemy extends Enemy {
 			ps._enemiesKilled++;
 			ps._hordeEnemiesKilled++;
 			
-			if (ps._hordeEnemiesKilled % 16 == 0)
+			if (ps._hordeEnemiesKilled % 24 == 0)
 				ps.createHeart(x, y);
 			
 			kill();

@@ -20,9 +20,10 @@ class Player extends Entity {
 	
 	private var _vclips:Array<TileClip>;
 	private var _mapstate:Map<String, Int>;
-	private var _curClip:TileClip;
+	public var _curClip:TileClip;
 	private var _movingDown:Bool;
 	public var _invul:Bool;
+	public var _gameEnd:Bool;
 	
 	private var _pright:Int;
 	private var _pleft:Int;
@@ -36,6 +37,7 @@ class Player extends Entity {
 		_speed = 0.15;
 		_movingDown = false;
 		_invul = false;
+		_gameEnd = false;
 		
 		_vclips = new Array<TileClip>();
 		_mapstate = new Map<String, Int>();
@@ -59,28 +61,29 @@ class Player extends Entity {
 	}
 	
 	public override function keyPressed	(event:KeyboardEvent) : Void {
-		switch (event.keyCode) {
-			case Keyboard.UP: {
-				_pup = 1;
-			}
-			case Keyboard.DOWN: {
-				_pdown = 1;
-			}
-			case Keyboard.RIGHT: {
-				_pright = 1;
-			}
-			case Keyboard.LEFT: {
-				_pleft = 1;
-			}
-			case Keyboard.A: {
-				var ps = PlayState.getInstance();
-				if (ps._bullets.length < ps._maxBullets) {
-					var bullet = new Bullet(_layer, Std.int(x + 14), Std.int(y - 3), ps._bullets);
-					ps._bullets.push(bullet);
-					ps._sndshoot.play();
+		if (!_gameEnd)
+			switch (event.keyCode) {
+				case Keyboard.UP: {
+					_pup = 1;
+				}
+				case Keyboard.DOWN: {
+					_pdown = 1;
+				}
+				case Keyboard.RIGHT: {
+					_pright = 1;
+				}
+				case Keyboard.LEFT: {
+					_pleft = 1;
+				}
+				case Keyboard.A: {
+					var ps = PlayState.getInstance();
+					if (ps._bullets.length < ps._maxBullets) {
+						var bullet = new Bullet(_layer, Std.int(x + 14), Std.int(y - 3), ps._bullets);
+						ps._bullets.push(bullet);
+						ps._sndshoot.play();
+					}
 				}
 			}
-		}
 	}
 	
 	public override function keyReleased(event:KeyboardEvent):Void {
@@ -121,7 +124,6 @@ class Player extends Entity {
 			visible = false;
 			PlayState.getInstance()._sndexplosion.play();
 			PlayState.getInstance()._bodyexplosions.push(new BodyExplosion(_layer, Std.int(x), Std.int(y)));
-			
 			PlayState.getInstance().gameOver();
 		}
 	}
@@ -159,15 +161,22 @@ class Player extends Entity {
 		x += _hspeed * eTime * _speed;
 		y += _vspeed * eTime * _speed;
 
-		if (x - _curClip.width / 2 < 0)
-			x = _curClip.width / 2;
-		else if (x + _curClip.width / 2 > 100)
-			x = 100 - _curClip.width / 2;
+		if (!_gameEnd) {
+			if (x - _curClip.width / 2 < 0)
+				x = _curClip.width / 2;
+			else {
+				if (!PlayState.getInstance()._fightingFinalBoss) {
+					if (x + _curClip.width / 2 > 100)
+						x = 100 - _curClip.width / 2;
+				} else if (x + _curClip.width / 2 > 66)
+						x = 66 - _curClip.width / 2;
+			}
 
-		if (y - _curClip.height / 2 < 0)
-			y = _curClip.height / 2;
-		else if (y + _curClip.height / 2 > 144 - 30 + 6)
-			y = 144 - _curClip.height / 2 - 30 + 6;
+			if (y - _curClip.height / 2 < 0)
+				y = _curClip.height / 2;
+			else if (y + _curClip.height / 2 > 144 - 30 + 6)
+				y = 144 - _curClip.height / 2 - 30 + 6;
+		}
 		
 		// select the correct sprite
 		if (_vspeed == 1) {

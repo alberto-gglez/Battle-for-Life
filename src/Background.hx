@@ -37,5 +37,11 @@ class Background extends Sprite {
 				p.x = 160 + p.width / 2;
 		}
 	}
+
+	public function delete():Void {
+		for (i in 0..._pieces.length) {
+			_layer.removeChild(_pieces.pop());
+		}
+	}
 	
 }

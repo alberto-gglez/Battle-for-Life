@@ -4,7 +4,6 @@ import motion.Actuate;
 import aze.display.TileClip;
 import aze.display.TileLayer;
 import aze.display.TileSprite;
-import openfl.geom.Rectangle;
 
 enum BossStages {
 	InitialStage;

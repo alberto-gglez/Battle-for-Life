@@ -112,6 +112,11 @@ class EnemyGroup extends Sprite {
 				create(7);
 				PlayState.getInstance()._laser = new Laser(_layer, wholeScreen());
 			}
+			case 10: {
+				// second boss
+				var e = new SecondBoss(_layer, this);
+				_enemies.push(e);
+			}
 		}
 	}
 	

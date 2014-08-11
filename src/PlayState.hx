@@ -48,7 +48,7 @@ class PlayState extends GameState {
 	public var _score:Int;
 	private var _scoretxt:TextField;
 	private var _gameOverTxt:TextField;
-	private var _gameCompletedTxt:TextField;
+	public var _gameCompletedTxt:TextField;
 	
 	public var _sndshoot:Sound;
 	public var _sndshoot2:Sound;
@@ -72,6 +72,7 @@ class PlayState extends GameState {
 	public var _hordeEnemiesKilled:Int;
 	
 	public var _laser:Laser;
+	public var _fightingFinalBoss:Bool;
 	
 	private function new() {
 		super();
@@ -123,21 +124,20 @@ class PlayState extends GameState {
 		_gameCompletedTxt.visible = false;
 		_gameCompletedTxt.selectable = false; _gameCompletedTxt.embedFonts = true;
 		_gameCompletedTxt.defaultTextFormat = new TextFormat(font, 16, 0x133C2E);
-		_gameCompletedTxt.x = 0; _gameCompletedTxt.y = 4;
+		_gameCompletedTxt.x = 0; _gameCompletedTxt.y = 6;
 		_gameCompletedTxt.autoSize = TextFieldAutoSize.NONE;
 		_gameCompletedTxt.width = 160;
-		_gameCompletedTxt.text = "     You have completed\n             the first level!\n        Stay alert for the\n            final version ;)\n\n      Thanks for playing!";
+		_gameCompletedTxt.text = "     You have made life.\n\n\n\n\n      Thanks for playing!";
 		
+	}
+
+	public function deleteBackground():Void {
+		_bg.delete();
 	}
 	
 	public function gameCompleted():Void {
-		for (h in _hearts)
-			Actuate.timer(2).onComplete(h.destroy);
-		
-		Actuate.timer(2).onComplete(Actuate.apply, [_player, { visible: false}]);
 		Actuate.timer(2).onComplete(Actuate.apply, [_gameCompletedTxt, { visible: true }]);
 		Actuate.timer(3).onComplete(Actuate.apply, [ this, { _canReset: true } ]);
-		_gameOver = true;
 	}
 	
 	public function gameOver():Void {
@@ -193,6 +193,7 @@ class PlayState extends GameState {
 		_score = 0;
 		_special = 3;
 		_hordeEnemiesKilled = 0;
+		_fightingFinalBoss = false;
 		
 		if (_gameMode == 3)
 			_lifes = 1;
@@ -237,7 +238,7 @@ class PlayState extends GameState {
 		
 		EnemyManager.getInstance().init(_gamelayer, 1);
 		LevelManager.getInstance().init(_gamelayer, ["level1", "level2"]);
-		LevelManager.getInstance().startLevel(1);
+		LevelManager.getInstance().startLevel(0);
 		
 		_prevTime = Lib.getTimer();
 	}

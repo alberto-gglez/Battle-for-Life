@@ -41,10 +41,10 @@
     <SubTexture name="playerstand_1" x="2" y="170" width="31" height="19"/>
     <SubTexture name="playerstand_2" x="35" y="170" width="31" height="19"/>
     <SubTexture name="playerstand_3" x="2" y="170" width="31" height="19"/>
-    <SubTexture name="playerstand_f_0" x="68" y="170" width="31" height="19"/>
-    <SubTexture name="playerstand_f_1" x="101" y="170" width="31" height="19"/>
-    <SubTexture name="playerstand_f_2" x="134" y="170" width="31" height="19"/>
-    <SubTexture name="playerstand_f_3" x="101" y="170" width="31" height="19"/>
+    <SubTexture name="playersf_0" x="68" y="170" width="31" height="19"/>
+    <SubTexture name="playersf_1" x="101" y="170" width="31" height="19"/>
+    <SubTexture name="playersf_2" x="134" y="170" width="31" height="19"/>
+    <SubTexture name="playersf_3" x="101" y="170" width="31" height="19"/>
     <SubTexture name="playerup_0" x="167" y="170" width="31" height="19"/>
     <SubTexture name="playerup_1" x="200" y="170" width="31" height="19"/>
     <SubTexture name="secondboss_base" x="2" y="191" width="82" height="82"/>
