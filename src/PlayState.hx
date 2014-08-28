@@ -151,7 +151,7 @@ class PlayState extends GameState {
 			Actuate.timer(2).onComplete(h.destroy);
 		
 		Actuate.timer(2).onComplete(Actuate.apply, [_gameOverTxt, { visible: true }]);
-		Actuate.timer(2).onComplete(Actuate.apply, [ this, { _canReset: true } ]);
+		Actuate.timer(3).onComplete(Actuate.apply, [ this, { _canReset: true } ]);
 		_gameOver = true;
 		_musicChannel.stop();
 	}

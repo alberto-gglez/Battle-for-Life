@@ -33,7 +33,7 @@ class SecondBoss extends Enemy {
 		y = 57 - _sprite.height / 2;
 		_sprite.y = y + _sprite.height / 2;
 
-		_health = 10;
+		_health = 50;
 
 		_angle = 0;
 
@@ -60,7 +60,7 @@ class SecondBoss extends Enemy {
 
 	public function init():Void {
 		PlayState.getInstance()._fightingFinalBoss = true;
-		Actuate.tween(this, 3, { x: 160 - _sprite.width - 10 });
+		Actuate.tween(this, 6, { x: 160 - _sprite.width - 10 });
 		Actuate.timer(3).onComplete(Actuate.apply, [this, { _active: true } ]);
 		//Actuate.timer(6).onComplete(laser);
 		Actuate.timer(3).onComplete(movement1);
