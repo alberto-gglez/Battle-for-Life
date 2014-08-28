@@ -247,7 +247,7 @@ class PlayState extends GameState {
 		
 		EnemyManager.getInstance().init(_gamelayer, 1);
 		LevelManager.getInstance().init(_gamelayer, ["level1", "level2"]);
-		LevelManager.getInstance().startLevel(1, 17);
+		LevelManager.getInstance().startLevel(0);
 		
 		_prevTime = Lib.getTimer();
 	}
