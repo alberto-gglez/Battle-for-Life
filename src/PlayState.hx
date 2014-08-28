@@ -1,5 +1,6 @@
 package ;
 
+import openfl.media.SoundChannel;
 import openfl.text.TextFieldAutoSize;
 import openfl.text.TextFormat;
 import openfl.display.FPS;
@@ -61,6 +62,9 @@ class PlayState extends GameState {
 	public var _sndHordeKilled:Sound;
 	public var _sndLaser:Sound;
 	
+	public var _music:Sound;
+	public var _musicChannel:SoundChannel;
+	
 	private var _keysPressed:Map<Int, Bool>;
 	
 	public var _gameOver:Bool;
@@ -92,6 +96,8 @@ class PlayState extends GameState {
 		_sndLifeUp = Assets.getSound("snd/lifeup.wav");
 		_sndHordeKilled = Assets.getSound("snd/hordekilled.wav");
 		_sndLaser = Assets.getSound("snd/laser.wav");
+		
+		_music = Assets.getMusic("msc/Interception.mp3");
 		
 		_hearts = new Array<Heart>();
 		
@@ -147,6 +153,7 @@ class PlayState extends GameState {
 		Actuate.timer(2).onComplete(Actuate.apply, [_gameOverTxt, { visible: true }]);
 		Actuate.timer(2).onComplete(Actuate.apply, [ this, { _canReset: true } ]);
 		_gameOver = true;
+		_musicChannel.stop();
 	}
 	
 	public function createHeart(xp:Float, yp:Float):Void {
@@ -184,6 +191,8 @@ class PlayState extends GameState {
 	
 	// Event management
 	public override function enter():Void {
+		_musicChannel = _music.play(0);
+		
 		_bg = new Background(_gamelayer);
 		
 		_player = new Player(_gamelayer, 15, 50);
@@ -238,12 +247,13 @@ class PlayState extends GameState {
 		
 		EnemyManager.getInstance().init(_gamelayer, 1);
 		LevelManager.getInstance().init(_gamelayer, ["level1", "level2"]);
-		LevelManager.getInstance().startLevel(0);
+		LevelManager.getInstance().startLevel(1, 17);
 		
 		_prevTime = Lib.getTimer();
 	}
 	
 	public override function exit():Void {
+		_musicChannel.stop();
 		removeChildren();
 		_gamelayer.removeAllChildren();
 		_uilayer.removeAllChildren();
@@ -280,11 +290,17 @@ class PlayState extends GameState {
 		_scoretxt.text = Std.string(_score);
 		for (i in 0...(8 - _scoretxt.text.length))
 			_scoretxt.text = "0" + _scoretxt.text;
+			
+		// checks the music loop
+		if (_musicChannel.position > _music.length - 2000) {
+			_musicChannel.stop();
+			_musicChannel = _music.play(6400);
+		}
 		
 	}
 	
 	public override function keyPressed(event:KeyboardEvent):Void {
-		if (_keysPressed.get(event.keyCode) == null && !_gameOver) {
+		if (_keysPressed.get(event.keyCode) == null && !_gameOver && !_canReset) {
 			_keysPressed.set(event.keyCode, true);
 			
 			_player.keyPressed(event);

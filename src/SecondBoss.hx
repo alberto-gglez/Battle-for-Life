@@ -33,7 +33,7 @@ class SecondBoss extends Enemy {
 		y = 57 - _sprite.height / 2;
 		_sprite.y = y + _sprite.height / 2;
 
-		_health = 50;
+		_health = 10;
 
 		_angle = 0;
 
@@ -108,6 +108,8 @@ class SecondBoss extends Enemy {
 	}
 
 	public function kill():Void {
+		PlayState.getInstance()._musicChannel.stop();
+		
 		PlayState.getInstance()._laser = null;
 		_active = false;
 		PlayState.getInstance()._enemiesKilled++;
@@ -126,7 +128,6 @@ class SecondBoss extends Enemy {
 		Actuate.timer(2.1).onComplete(PlayState.getInstance()._sndexplosion.play);
 		
 		Actuate.timer(2.15).onComplete(gameEnd);
-		Actuate.timer(2.15).onComplete(_group.remove, [this]);
 	}
 
 	public function gameEnd():Void {
@@ -145,7 +146,7 @@ class SecondBoss extends Enemy {
 		Actuate.tween(player, 6, { x: _core.x - 3 }).ease(Quad.easeInOut).delay(3);
 		Actuate.timer(9.5).onComplete(setFinalClip);
 		Actuate.timer(13).onComplete(setFinalPose);
-		Actuate.timer(16).onComplete(PlayState.getInstance().gameCompleted);
+		Actuate.timer(16).onComplete(_group.remove, [this]);
 	}
 
 	public function setFinalClip():Void {

@@ -81,6 +81,7 @@ class LevelManager extends Sprite {
 				} else {
 					// game end
 					//Actuate.timer(2).onComplete(PlayState.getInstance().gameCompleted);
+					PlayState.getInstance().gameCompleted();
 				}
 			}
 		}
